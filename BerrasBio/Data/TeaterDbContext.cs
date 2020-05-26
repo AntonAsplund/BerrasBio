@@ -9,11 +9,11 @@ namespace BerrasBio.Data
 {
     public class TeaterDbContext : DbContext
     {
-        public List<Movie> Movies { get; set; }
-        public List<Salon> Salons { get; set; }
-        public List<Seat> Seats { get; set; }
-        public List<Ticket> Tickets { get; set; }
-        public List<Viewing> Viewings { get; set; }
+        public DbSet<Movie> Movies { get; set; }
+        public DbSet<Salon> Salons { get; set; }
+        public DbSet<Seat> Seats { get; set; }
+        public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<Viewing> Viewings { get; set; }
 
     }
 }
