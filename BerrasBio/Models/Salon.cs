@@ -9,5 +9,6 @@ namespace BerrasBio.Models
     {
         public int SalonId { get; set; }
         public string Name { get; set; }
+        public List<Seat> Seats { get; set; }
     }
 }

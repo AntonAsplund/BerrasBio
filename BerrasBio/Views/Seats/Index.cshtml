@@ -1,0 +1,43 @@
+﻿@model IEnumerable<BerrasBio.Models.Seat>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SeatNumber)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SeatNumber)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.SeatId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.SeatId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.SeatId">Delete</a> |
+                @if (item.Booked)
+                {
+                    <a asp-action="Booked" asp-route-id="@item.SeatId">Empty</a>
+                }
+                else { 
+                    <a asp-action="Booked" asp-route-id="@item.SeatId">Booked</a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

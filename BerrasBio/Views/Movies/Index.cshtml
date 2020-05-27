@@ -1,0 +1,50 @@
+﻿@model IEnumerable<BerrasBio.Models.Movie>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Movies</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LengthMinute)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsPlaying)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cathegory)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LengthMinute)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsPlaying)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cathegory)
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.MovieId">Details</a> |
+                <a asp-action="CheckView" asp-route-id="@item.MovieId">Viewings</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -9,6 +9,7 @@ namespace BerrasBio.Models
     public class Seat
     {
         public int SeatId { get; set; }
+        [ForeignKey("Salon")]
         public int SalonId { get; set; }
         public int SeatNumber { get; set; }
         [NotMapped]

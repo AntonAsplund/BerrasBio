@@ -15,5 +15,16 @@ namespace BerrasBio.Data
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Viewing> Viewings { get; set; }
 
+
+        public TeaterDbContext(DbContextOptions<TeaterDbContext> options)
+            : base(options)
+        {
+
+        }
+
+
+        public DbSet<BerrasBio.Models.Order> Order { get; set; }
+
+
     }
 }

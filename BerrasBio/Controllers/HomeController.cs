@@ -27,6 +27,10 @@ namespace BerrasBio.Controllers
         {
             return View();
         }
+        public IActionResult Movies()
+        {
+            return Redirect("/movies");
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
