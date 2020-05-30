@@ -2,7 +2,7 @@
 
 namespace BerrasBio.Migrations
 {
-    public partial class OrdersTable : Migration
+    public partial class second : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

@@ -5,39 +5,49 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Seats</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    Pick up to twelve empty seats.
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.SeatNumber)
+                Platsnummer
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.SeatNumber)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.SeatId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.SeatId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.SeatId">Delete</a> |
-                @if (item.Booked)
-                {
-                    <a asp-action="Booked" asp-route-id="@item.SeatId">Empty</a>
-                }
-                else { 
-                    <a asp-action="Booked" asp-route-id="@item.SeatId">Booked</a>
-                }
-            </td>
-        </tr>
-}
+
+        <form asp-action="Choose">
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SeatNumber)
+                    </td>
+                    <td>
+                        @if (item.Booked == false)
+                        {
+                            <a asp-action="Booked" asp-route-id="@item.SeatId" asp-route-viewingId="@item.ViewingId">Empty</a>
+                        }
+                        else
+                        {
+                            <a asp-action="Booked" asp-route-id="@item.SeatId" asp-route-viewingId="@item.ViewingId">Booked</a>
+
+                        }
+                        <input asp-for="@item.Booked" name="@item.SeatId" type="checkbox" />
+                    </td>
+                </tr>
+            }
+            <input name="viewingId" type="hidden" value="@Model.First().ViewingId" />
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+
     </tbody>
 </table>

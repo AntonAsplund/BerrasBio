@@ -12,11 +12,11 @@ namespace BerrasBio.Controllers
 {
     public class ViewingsController : Controller
     {
-        private readonly TeaterDbContext _context;
+        private readonly ISqlTheaterData sqlTheaterData;
 
-        public ViewingsController(TeaterDbContext context)
+        public ViewingsController(ISqlTheaterData sqlTheaterData)
         {
-            _context = context;
+            this.sqlTheaterData = sqlTheaterData;
         }
         /*
         // GET: Viewings
@@ -32,11 +32,17 @@ namespace BerrasBio.Controllers
             {
                 return NotFound();
             }
-            // todo: load tickets
-            List<Viewing> viewings = await _context.Viewings.Where(x => x.MovieId == id).ToListAsync();
+            List<Viewing> viewings = await sqlTheaterData.GetViewingsById((int)id);
             return base.View(viewings);
         }
+        public IActionResult Book(int? id)
+        {
+            string url = String.Format($"../../Seats/index/{id}");
+            return base.Redirect(url);
+        }
 
+
+        /*
         // GET: Viewings/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -55,17 +61,14 @@ namespace BerrasBio.Controllers
             return View(viewing);
         }
 
+        */
+
+        /*
         // GET: Viewings/Create
         public IActionResult Create()
         {
             return View();
         }
-        public IActionResult Book(int? id)
-        {
-            string url = String.Format($"../../Seats/index/{id}");
-            return base.Redirect(url);
-        }
-
         // POST: Viewings/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -166,5 +169,6 @@ namespace BerrasBio.Controllers
         {
             return _context.Viewings.Any(e => e.ViewingId == id);
         }
+        */
     }
 }

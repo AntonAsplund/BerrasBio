@@ -12,73 +12,44 @@ namespace BerrasBio.Controllers
 {
     public class OrdersController : Controller
     {
-        private readonly TeaterDbContext _context;
+        private readonly ISqlTheaterData sqlTheaterData;
 
-        public OrdersController(TeaterDbContext context)
+        public OrdersController(ISqlTheaterData sqlTheaterData)
         {
-            _context = context;
+            this.sqlTheaterData = sqlTheaterData;
         }
 
         // GET: Orders
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? Id)
         {
-            return View(await _context.Order.ToListAsync());
-        }
-
-        // GET: Orders/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
+            if (Id == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Order
-                .FirstOrDefaultAsync(m => m.OrderId == id);
+            var order = await sqlTheaterData.GetOrder((int)Id);
             if (order == null)
             {
                 return NotFound();
             }
-
-            return View(order);
+            return base.View(order);
         }
 
-        // GET: Orders/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Orders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OrderId,CustomerName")] Order order)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(order);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(order);
-        }
-
+        
         // GET: Orders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? Id)
         {
-            if (id == null)
+            if (Id == null)
             {
                 return NotFound();
             }
 
-            var order = await _context.Order.FindAsync(id);
+            var order = await sqlTheaterData.GetOrder((int)Id);
             if (order == null)
             {
                 return NotFound();
             }
-            return View(order);
+            return base.View(order);
         }
 
         // POST: Orders/Edit/5
@@ -97,12 +68,11 @@ namespace BerrasBio.Controllers
             {
                 try
                 {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
+                    await sqlTheaterData.Update(order);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!OrderExists(order.OrderId))
+                    if (!sqlTheaterData.OrderExists(order.OrderId))
                     {
                         return NotFound();
                     }
@@ -111,11 +81,38 @@ namespace BerrasBio.Controllers
                         throw;
                     }
                 }
+                string url = String.Format($"../../Orders/index/{id}");
+
+                return Redirect(url);
+            }
+
+            return View(order);
+        }
+        /*
+         * 
+         * // GET: Orders/Create
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Orders/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("OrderId,CustomerName")] Order order)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(order);
+                await _context.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
             return View(order);
         }
-
+        
         // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -145,9 +142,6 @@ namespace BerrasBio.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool OrderExists(int id)
-        {
-            return _context.Order.Any(e => e.OrderId == id);
-        }
+        */
     }
 }

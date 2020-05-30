@@ -7,24 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BerrasBio.Data;
 using BerrasBio.Models;
-using BerrasBio.Migrations;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 
 namespace BerrasBio.Controllers
 {
     public class SeatsController : Controller
     {
-        public Viewing Viewing { get; set; }
-        public List<Seat> Seats { get; set; }
 
-        private readonly TeaterDbContext _context;
+
+
+        private readonly ISqlTheaterData sqlTheaterData;
         /// <summary>
         /// Will add everytime user click a seat.
         /// </summary>
         public int NumBookedSeats { get; set; }
         // todo: Check how to add a button and method to controll it.
-        public SeatsController(TeaterDbContext context)
+        public SeatsController(ISqlTheaterData sqlTheaterData)
         {
-            _context = context;
+            this.sqlTheaterData = sqlTheaterData;
         }
 
         // GET: Seats
@@ -36,55 +37,72 @@ namespace BerrasBio.Controllers
             }
             else
             {
-                Seats = await FindSeats((int) id);
-                return View(Seats);
+                return View(await sqlTheaterData.FindSeats((int) id));
             }
         }
 
-        public IActionResult Booked(int? id)
+        // POST: Seats/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Choose(IFormCollection data)
         {
-            if (id == null)
+            List<int> seatIds = new List<int>();
+            StringValues viewingIdString;
+            data.TryGetValue("viewingId", out viewingIdString);
+            int viewingId = 0;
+            Int32.TryParse(viewingIdString, out viewingId);
+            foreach (var key in data.Keys)
+            {
+                int seatId = 0;
+                if (Int32.TryParse(key, out seatId))
+                {
+                    seatIds.Add(seatId);
+                }
+            }
+            int orderId = sqlTheaterData.CreateOrder(seatIds, viewingId);
+
+
+            string url = String.Format($"../../Orders/Edit/{orderId}");
+            return Redirect(url);
+
+            /*
+
+            if (id != seat.SeatId)
             {
                 return NotFound();
             }
-            Console.WriteLine("checked");
-            Seat seat = _context.Seats.Find(id);
-            seat.Booked = seat.Booked!;
-            Order order = new Order();
-            order.CustomerName = "Unknown";
-            Ticket ticket = new Ticket();
-            ticket.Date = DateTime.Now;
-            ticket.SeatId = (int) id;
 
-
-            order.Tickets = new List<Ticket>();
-            var orderId = _context.Add(order);
-            //orderId.
-            //_context.SaveChangesAsync();
-            string url = String.Format($"../../Orders/index");
-            return Redirect(url);
-
-        }
-
-        private async Task<List<Seat>> FindSeats(int id)
-        {
-            var seatIds = _context.Tickets.Where(x => x.ViewingId == id).Select(x => x.SeatId);
-            int salonId = _context.Viewings.Find(id).SalonId;
-            List<Seat> seats = await _context.Seats.Where(x => seatIds.Contains(x.SeatId)).ToListAsync<Seat>();
-            List<Seat> salonSeats = await _context.Seats.Where(x => x.SalonId == salonId).ToListAsync();
-            foreach (var item in salonSeats)
+            if (ModelState.IsValid)
             {
-                foreach (var seat in seats)
+                try
                 {
-                    if (item.SeatId == seat.SeatId)
+                    _context.Update(seat);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!SeatExists(seat.SeatId))
                     {
-                        item.Booked = false;
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
                     }
                 }
+                return RedirectToAction(nameof(Index));
             }
-            return salonSeats;
+
+            */
+            //todo: redirect to orders
+
+            return Ok(data);
         }
 
+
+        /*
         // GET: Seats/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -209,5 +227,6 @@ namespace BerrasBio.Controllers
         {
             return _context.Seats.Any(e => e.SeatId == id);
         }
+        */
     }
 }

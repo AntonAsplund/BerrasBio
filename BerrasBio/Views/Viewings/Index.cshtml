@@ -5,22 +5,22 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Viewings</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MovieId)
+                Titel
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StartTime)
+                Start tid
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.SalonId)
+                Salong
+            </th>
+            <th>
+                Platser kvar
             </th>
             <th></th>
         </tr>
@@ -29,21 +29,21 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.MovieId)
+                @Html.DisplayFor(modelItem => item.Movie.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StartTime)
+                @Html.DisplayFor(modelItem => item.FormatedStartTime )
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SalonId)
+                @Html.DisplayFor(modelItem => item.Salon.Name)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.ViewingId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ViewingId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ViewingId">Delete</a>
-                @item.SeatsLeft
-                <a asp-action="Book" asp-route-id="@item.ViewingId">Book</a>
+               @item.SeatsLeft
             </td>
+            <td>
+               <a asp-action="Book" asp-route-id="@item.ViewingId">Boka biljetter</a>
+            </td>
+            
         </tr>
 }
     </tbody>

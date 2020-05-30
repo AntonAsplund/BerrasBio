@@ -116,6 +116,8 @@ namespace BerrasBio.Migrations
 
                     b.HasIndex("OrderId");
 
+                    b.HasIndex("SeatId");
+
                     b.HasIndex("ViewingId");
 
                     b.ToTable("Tickets");
@@ -139,6 +141,10 @@ namespace BerrasBio.Migrations
 
                     b.HasKey("ViewingId");
 
+                    b.HasIndex("MovieId");
+
+                    b.HasIndex("SalonId");
+
                     b.ToTable("Viewings");
                 });
 
@@ -147,22 +153,43 @@ namespace BerrasBio.Migrations
                     b.HasOne("BerrasBio.Models.Salon", null)
                         .WithMany("Seats")
                         .HasForeignKey("SalonId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("BerrasBio.Models.Ticket", b =>
                 {
-                    b.HasOne("BerrasBio.Models.Order", null)
+                    b.HasOne("BerrasBio.Models.Order", "Order")
                         .WithMany("Tickets")
                         .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("BerrasBio.Models.Viewing", null)
+                    b.HasOne("BerrasBio.Models.Seat", "Seat")
+                        .WithMany()
+                        .HasForeignKey("SeatId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BerrasBio.Models.Viewing", "Viewing")
                         .WithMany("Tickets")
                         .HasForeignKey("ViewingId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BerrasBio.Models.Viewing", b =>
+                {
+                    b.HasOne("BerrasBio.Models.Movie", "Movie")
+                        .WithMany()
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BerrasBio.Models.Salon", "Salon")
+                        .WithMany()
+                        .HasForeignKey("SalonId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

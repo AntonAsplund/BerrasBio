@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BerrasBio.Migrations
 {
     [DbContext(typeof(TeaterDbContext))]
-    [Migration("20200527105053_addedMovieTitle")]
-    partial class addedMovieTitle
+    [Migration("20200529151806_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,6 +43,21 @@ namespace BerrasBio.Migrations
                     b.HasKey("MovieId");
 
                     b.ToTable("Movies");
+                });
+
+            modelBuilder.Entity("BerrasBio.Models.Order", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("OrderId");
+
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("BerrasBio.Models.Salon", b =>
@@ -90,6 +105,9 @@ namespace BerrasBio.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
                     b.Property<int>("SeatId")
                         .HasColumnType("int");
 
@@ -97,6 +115,10 @@ namespace BerrasBio.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("TicketId");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("SeatId");
 
                     b.HasIndex("ViewingId");
 
@@ -113,10 +135,17 @@ namespace BerrasBio.Migrations
                     b.Property<int>("MovieId")
                         .HasColumnType("int");
 
+                    b.Property<int>("SalonId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
 
                     b.HasKey("ViewingId");
+
+                    b.HasIndex("MovieId");
+
+                    b.HasIndex("SalonId");
 
                     b.ToTable("Viewings");
                 });
@@ -126,16 +155,43 @@ namespace BerrasBio.Migrations
                     b.HasOne("BerrasBio.Models.Salon", null)
                         .WithMany("Seats")
                         .HasForeignKey("SalonId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("BerrasBio.Models.Ticket", b =>
                 {
-                    b.HasOne("BerrasBio.Models.Viewing", null)
+                    b.HasOne("BerrasBio.Models.Order", "Order")
+                        .WithMany("Tickets")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BerrasBio.Models.Seat", "Seat")
+                        .WithMany()
+                        .HasForeignKey("SeatId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BerrasBio.Models.Viewing", "Viewing")
                         .WithMany("Tickets")
                         .HasForeignKey("ViewingId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("BerrasBio.Models.Viewing", b =>
+                {
+                    b.HasOne("BerrasBio.Models.Movie", "Movie")
+                        .WithMany()
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("BerrasBio.Models.Salon", "Salon")
+                        .WithMany()
+                        .HasForeignKey("SalonId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

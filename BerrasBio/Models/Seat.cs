@@ -14,5 +14,7 @@ namespace BerrasBio.Models
         public int SeatNumber { get; set; }
         [NotMapped]
         public bool Booked { get; set; }
+        [NotMapped]
+        public int ViewingId { get; set; }
     }
 }

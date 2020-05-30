@@ -14,6 +14,8 @@ namespace BerrasBio.Data
         public DbSet<Seat> Seats { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Viewing> Viewings { get; set; }
+    
+        public DbSet<Order> Order { get; set; }
 
 
         public TeaterDbContext(DbContextOptions<TeaterDbContext> options)
@@ -22,9 +24,24 @@ namespace BerrasBio.Data
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Ticket>()
+                .HasOne<Viewing>(s => s.Viewing)
+                .WithMany(ta => ta.Tickets)
+                .HasForeignKey(u => u.ViewingId)
+                .OnDelete(DeleteBehavior.NoAction);
 
-        public DbSet<BerrasBio.Models.Order> Order { get; set; }
+            var cascadeFKs = modelBuilder.Model.GetEntityTypes()
+        .SelectMany(t => t.GetForeignKeys())
+        .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
 
+            foreach (var fk in cascadeFKs)
+                fk.DeleteBehavior = DeleteBehavior.Restrict;
+
+
+            base.OnModelCreating(modelBuilder);
+        }
 
     }
 }

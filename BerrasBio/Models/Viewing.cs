@@ -12,11 +12,15 @@ namespace BerrasBio.Models
         public int ViewingId { get; set; }
         [ForeignKey("Movie")]
         public int MovieId { get; set; }
+        public Movie Movie { get; set; }
         public DateTime StartTime { get; set; }
+        [NotMapped]
+        public string FormatedStartTime { get; set; }
         [NotMapped]
         public int SeatsLeft { get; set; }
         public List<Ticket> Tickets { get; set; }
         [ForeignKey("Salon")]
         public int SalonId { get; set; }
+        public Salon Salon { get; set; }
     }
 }
