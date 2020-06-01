@@ -4,14 +4,16 @@ using BerrasBio.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BerrasBio.Migrations
 {
     [DbContext(typeof(TeaterDbContext))]
-    partial class TeaterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200530151000_salon")]
+    partial class salon
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -150,7 +152,7 @@ namespace BerrasBio.Migrations
 
             modelBuilder.Entity("BerrasBio.Models.Seat", b =>
                 {
-                    b.HasOne("BerrasBio.Models.Salon", "Salon")
+                    b.HasOne("BerrasBio.Models.Salon", null)
                         .WithMany("Seats")
                         .HasForeignKey("SalonId")
                         .OnDelete(DeleteBehavior.Restrict)

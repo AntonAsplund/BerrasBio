@@ -1,5 +1,6 @@
 ﻿using BerrasBio.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -32,7 +33,7 @@ namespace BerrasBio.Data
             return await _context.Movies.ToListAsync();
         }
 
-        public int CreateOrder(List<int> seatIds, int viewingId)
+        public Order CreateOrder(List<int> seatIds, int viewingId)
         {
             Order order = new Order();
             order.CustomerName = "Unknown";
@@ -49,8 +50,13 @@ namespace BerrasBio.Data
                 ticket.OrderId = order.OrderId;
                 _context.Add(ticket);
             }
+            return order;
+        }
+
+        public int Update()
+        {
             int ticketsSaved = _context.SaveChanges();
-            return order.OrderId;
+            return ticketsSaved;
         }
         public async Task<int> Update(Order order)
         {
@@ -77,7 +83,7 @@ namespace BerrasBio.Data
             return order;
         }
 
-        public async Task<List<Viewing>> GetViewingsById(int movieId)
+        public async Task<List<Viewing>> GetViewingsById(int movieId, string order)
         {
             List<Viewing> viewings = await _context.Viewings.Where(x => x.MovieId == movieId).ToListAsync();
             foreach (Viewing viewing in viewings)
@@ -88,7 +94,11 @@ namespace BerrasBio.Data
                 viewing.SeatsLeft = 50 - viewing.Tickets.Count;
                 viewing.FormatedStartTime = viewing.StartTime.ToString("dddd HH:mm");
             }
-            return viewings;
+            if (order == "Num") { 
+                return viewings.OrderBy(x => x.SeatsLeft).ToList();
+            } else { 
+                return viewings.OrderBy(x => x.StartTime).ToList();
+            }
         }
 
         public async Task<List<Seat>> FindSeats(int id)
@@ -100,6 +110,8 @@ namespace BerrasBio.Data
             int salonId = _context.Viewings.Find(id).SalonId;
             List<Seat> seats = await _context.Seats.Where(x => seatIds.Contains(x.SeatId)).ToListAsync<Seat>();
             Seats = await _context.Seats.Where(x => x.SalonId == salonId).ToListAsync();
+            _context.Entry(Seats.First()).Reference(v => v.Salon).Load();
+
             foreach (var item in Seats)
             {
                 item.ViewingId = id;
@@ -107,7 +119,7 @@ namespace BerrasBio.Data
                 {
                     if (item.SeatId == seat.SeatId)
                     {
-                        item.Booked = false;
+                        item.Booked = true;
                     }
                 }
             }

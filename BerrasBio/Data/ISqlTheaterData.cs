@@ -11,10 +11,11 @@ namespace BerrasBio.Data
         Task<Movie> OnGetMovie(int? id);
         Task<List<Movie>> OnGetMovies();
         Task<List<Seat>> FindSeats(int id);
-        int CreateOrder(List<int> ids, int viewingId);
-        Task<List<Viewing>> GetViewingsById(int movieId);
+        Order CreateOrder(List<int> seatIds, int viewingId);
+        Task<List<Viewing>> GetViewingsById(int movieId, string order);
         Task<Order> GetOrder(int Id);
         Task<int> Update(Order order);
+        int Update();
         bool OrderExists(int id);
     }
 }

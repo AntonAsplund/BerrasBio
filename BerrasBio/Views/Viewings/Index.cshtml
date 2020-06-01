@@ -5,22 +5,23 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Viewings</h1>
+<h1>Visningar för <b>@Model.First().Movie.Title</b></h1>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                Titel
-            </th>
-            <th>
-                Start tid
+                <a asp-action="CheckView" asp-route-id="@Model.First().MovieId" asp-route-order="Time">Start tid</a>
+
+                
             </th>
             <th>
                 Salong
             </th>
             <th>
-                Platser kvar
+                <a asp-action="CheckView" asp-route-id="@Model.First().MovieId" asp-route-order="Num">Platser kvar</a>
+
+                
             </th>
             <th></th>
         </tr>
@@ -29,15 +30,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Movie.Title)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.FormatedStartTime )
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Salon.Name)
             </td>
             <td>
+
                @item.SeatsLeft
             </td>
             <td>

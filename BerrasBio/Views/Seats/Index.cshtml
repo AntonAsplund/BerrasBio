@@ -5,49 +5,40 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Seats</h1>
+<h1>Salong: @Model.First().Salon.Name</h1>
 
 <p>
-    Pick up to twelve empty seats.
+    Välj upp till tolv platser
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Platsnummer
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
 
-        <form asp-action="Choose">
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.SeatNumber)
-                    </td>
-                    <td>
-                        @if (item.Booked == false)
-                        {
-                            <a asp-action="Booked" asp-route-id="@item.SeatId" asp-route-viewingId="@item.ViewingId">Empty</a>
-                        }
-                        else
-                        {
-                            <a asp-action="Booked" asp-route-id="@item.SeatId" asp-route-viewingId="@item.ViewingId">Booked</a>
+<div>
 
-                        }
-                        <input asp-for="@item.Booked" name="@item.SeatId" type="checkbox" />
-                    </td>
-                </tr>
-            }
-            <input name="viewingId" type="hidden" value="@Model.First().ViewingId" />
+    <form asp-action="Choose" class="seats-grid">
+        @foreach (var item in Model)
+        {
 
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="seat-num">
+                <p>
+                    @item.SeatNumber
+                </p>
+                <div class="seat-cont" id="@item.SeatNumber">
+                    <input asp-for="@item.Booked" class="check-seat" name="@item.SeatId" type="checkbox" placeholder="@item.SeatId" />
+                </div>
             </div>
-        </form>
 
-    </tbody>
-</table>
+        }
+        <input name="viewingId" type="hidden" value="@Model.First().ViewingId" />
+
+        <div class="form-group">
+            <input type="submit" value="Fortsätt" class="btn btn-primary" />
+        </div>
+    </form>
+
+</div>
+
+<p id="seat-count">
+    0
+</p>
+<form name="ignore_me">
+    <input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0" />
+</form>

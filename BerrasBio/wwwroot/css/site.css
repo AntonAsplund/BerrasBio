@@ -69,3 +69,34 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+.seats-grid {
+    display: grid;
+    grid-row: 20px 20px;
+    width: 100
+    grid-template-rows: repeat(5, 1fr);
+    grid-template-columns:repeat(10, 1fr);
+}
+
+.seat-cont {
+    text-align: center;
+    background-color: green;
+    padding: -1.5em;
+    margin: 0.2em;
+}
+.seat-label {
+    width: 100%;
+    background-color: green;
+}
+/*.seat-cont:hover {
+    background-color: grey;
+}
+*/
+.check-seat {
+    width: 100%;
+    height: 3em;
+    margin-top; 1em;
+    visibility: hidden;
+}
+.seat-num {
+    text-align: center;
+}
