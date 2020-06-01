@@ -148,5 +148,12 @@ namespace BerrasBio.Data
         {
             return _context.Order.Any(e => e.OrderId == id);
         }
+
+        public Movie AddMovie(Movie movie)
+        {
+            _context.Movies.Add(movie);
+            _context.SaveChanges();
+            return movie;
+        }
     }
 }

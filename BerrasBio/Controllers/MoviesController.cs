@@ -28,7 +28,6 @@ namespace BerrasBio.Controllers
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-
             if (id == null)
             {
                 return NotFound();
@@ -45,6 +44,19 @@ namespace BerrasBio.Controllers
         {
             return Redirect(String.Format($"../../Viewings/index?id={id}&order={order}"));
             //return Redirect(String.Format($"../../Viewings/index/{id}/{order}"));
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Movie movie)
+        {
+            sqlTheaterData.AddMovie(movie);
+            TempData["Message"] = "Movie was added successfully to the database!";
+            return RedirectToAction("Create");
         }
     }
 }

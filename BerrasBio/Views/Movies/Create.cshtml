@@ -2,37 +2,62 @@
 
 @{
     ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Create</h1>
+@if(TempData["Message"] != null)
+{
+    <div class="alert alert-info">@TempData["Message"]</div>
+}
 
-<h4>Movie</h4>
+<h1 class="mb-3">Add movie</h1>
+
+<div class="form-group">
+    <div class="input-group">
+        <input type="search" class="form-control" placeholder="Search for a movie title" id="searchTerm"/>
+        <span class="input-group-btn">
+            <button class="btn btn-default" id="search">
+                <i class="glyphicon glyphicon-search">Search</i>
+            </button>
+        </span>
+    </div>
+</div>
+
+<div class="alert-danger" id="error"></div>
+
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4 d-none" id="movieInfo">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
+                <input asp-for="Title" class="form-control" id="title" readonly />
             </div>
             <div class="form-group">
                 <label asp-for="LengthMinute" class="control-label"></label>
-                <input asp-for="LengthMinute" class="form-control" />
-                <span asp-validation-for="LengthMinute" class="text-danger"></span>
+                <input asp-for="LengthMinute" class="form-control" id="lenght" readonly />
             </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsPlaying" /> @Html.DisplayNameFor(model => model.IsPlaying)
-                </label>
-            </div>
+
             <div class="form-group">
                 <label asp-for="Cathegory" class="control-label"></label>
-                <input asp-for="Cathegory" class="form-control" />
-                <span asp-validation-for="Cathegory" class="text-danger"></span>
+                <input asp-for="Cathegory" class="form-control" id="category" readonly />
             </div>
+
+            <div class="form-group">
+                <label asp-for="ReleaseYear" class="control-label"></label>
+                <input asp-for="ReleaseYear" class="form-control" id="year" readonly />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Plot" class="control-label"></label>
+                <textarea asp-for="Plot" class="form-control" rows="5" id="plot" readonly></textarea>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="PerentalGuidance" class="control-label"></label>
+                <input asp-for="PerentalGuidance" class="form-control" id="pg" readonly />
+            </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -40,10 +65,5 @@
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+<script src="~/js/ApiCalls.js"></script>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
