@@ -22,7 +22,7 @@ namespace BerrasBio
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by thehej runtime. Use this method to add services to the container.
+        // This method gets called by thehehej runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextPool<TeaterDbContext>(cfg => {
