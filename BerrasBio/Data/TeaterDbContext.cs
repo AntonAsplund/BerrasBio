@@ -14,7 +14,9 @@ namespace BerrasBio.Data
         public DbSet<Seat> Seats { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<Viewing> Viewings { get; set; }
-    
+
+        public DbSet<UserCredentials> userCredentials { get; set; }
+
         public DbSet<Order> Order { get; set; }
 
 
