@@ -4,14 +4,16 @@ using BerrasBio.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BerrasBio.Migrations
 {
     [DbContext(typeof(TeaterDbContext))]
-    partial class TeaterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200601145443_addedUsersAndMovieProperties")]
+    partial class addedUsersAndMovieProperties
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -29,22 +31,10 @@ namespace BerrasBio.Migrations
                     b.Property<string>("Cathegory")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsPlaying")
                         .HasColumnType("bit");
 
                     b.Property<int>("LengthMinute")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PerentalGuidance")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Plot")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("ReleaseYear")
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
@@ -142,7 +132,7 @@ namespace BerrasBio.Migrations
 
             modelBuilder.Entity("BerrasBio.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -159,9 +149,9 @@ namespace BerrasBio.Migrations
                     b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserId");
+                    b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("userCredentials");
                 });
 
             modelBuilder.Entity("BerrasBio.Models.Viewing", b =>

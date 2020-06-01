@@ -14,5 +14,9 @@ namespace BerrasBio.Models
         public int LengthMinute { get; set; }
         public bool IsPlaying { get; set; }
         public string Cathegory { get; set; }
+        public string Description { get; set; }
+        public int ReleaseYear { get; set; }
+        public string Plot { get; set; }
+        public int PerentalGuidance { get; set; }
     }
 }

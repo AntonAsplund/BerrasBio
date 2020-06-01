@@ -35,11 +35,14 @@ namespace BerrasBio.Data
 
         public Order CreateOrder(List<int> seatIds, int viewingId)
         {
+            User user = CreateUser();
             Order order = new Order();
             order.CustomerName = "Unknown";
             //_context.Add(ticket);
             order.Tickets = new List<Ticket>();
             _context.Add(order);
+            order.UserId = user.UserId;
+            order.User = user;
             int numSaved = _context.SaveChanges();
             foreach (int id in seatIds)
             {
@@ -51,6 +54,19 @@ namespace BerrasBio.Data
                 _context.Add(ticket);
             }
             return order;
+        }
+
+        private User CreateUser()
+        {
+            User user = new User();
+            user.Password = "password";
+            user.PhoneNumber = "333";
+            user.IsAdmin = false;
+            user.UserName = "Daniel";
+            _context.Add(user);
+            _context.SaveChanges();
+
+            return user;
         }
 
         public int Update()
