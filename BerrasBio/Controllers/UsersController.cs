@@ -7,23 +7,25 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BerrasBio.Data;
 using BerrasBio.Models;
-using BerrasBio.Security;
 
 namespace BerrasBio.Controllers
 {
     public class UsersController : Controller
     {
         private readonly TeaterDbContext _context;
+        private readonly ISqlTheaterData sqlTheaterData;
 
-        public UsersController(TeaterDbContext context)
+        public UsersController(TeaterDbContext context, ISqlTheaterData sqlTheaterData)
         {
+            this.sqlTheaterData = sqlTheaterData;
             _context = context;
         }
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Users.ToListAsync());
+            List<User> users = await sqlTheaterData.OnGetUsers();
+            return base.View(users);
         }
 
         // GET: Users/Details/5
@@ -34,8 +36,8 @@ namespace BerrasBio.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.UserId == id);
+            var user = await sqlTheaterData.OnGetUser(id);
+
             if (user == null)
             {
                 return NotFound();
@@ -59,21 +61,12 @@ namespace BerrasBio.Controllers
         {
             if (ModelState.IsValid)
             {
-                user.Password = Encryption.EncryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
-                //user.Password = Encryption.EncryptString(configuration["Jwt:Key"], user.Password);
-                Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<User> entityEntry = _context.Users.Add(user);
+                _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
         }
-
-
-        public IActionResult Login()
-        {
-            return View();
-        }
-
 
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
