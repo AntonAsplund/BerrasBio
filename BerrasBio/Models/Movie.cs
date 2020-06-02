@@ -16,6 +16,8 @@ namespace BerrasBio.Models
         public string Cathegory { get; set; }
         public int ReleaseYear { get; set; }
         public string Plot { get; set; }
+        public string Director { get; set; }
+        public string Actors { get; set; }
         public int PerentalGuidance { get; set; }
     }
 }
