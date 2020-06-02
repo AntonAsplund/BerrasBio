@@ -1,4 +1,5 @@
 ﻿using BerrasBio.Models;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,6 @@ namespace BerrasBio.Data
         int Update();
         bool OrderExists(int id);
         void LoadOrder(Order order);
+        EntityEntry<User> AddUser(User user);
     }
 }
