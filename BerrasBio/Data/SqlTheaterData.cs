@@ -92,7 +92,11 @@ namespace BerrasBio.Data
             int ticketsSaved = _context.SaveChanges();
             return ticketsSaved;
         }
-
+        /// <summary>
+        /// Adds user to database
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public EntityEntry<User> AddUser(User user)
         {
             return _context.Users.Add(user);
