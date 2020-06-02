@@ -20,5 +20,6 @@ namespace BerrasBio.Data
         int Update();
         bool OrderExists(int id);
         void LoadOrder(Order order);
+        Movie AddMovie(Movie movie);
     }
 }
