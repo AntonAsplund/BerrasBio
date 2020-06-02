@@ -1,4 +1,5 @@
 ﻿using BerrasBio.Models;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,5 +22,6 @@ namespace BerrasBio.Data
         bool OrderExists(int id);
         void LoadOrder(Order order);
         Movie AddMovie(Movie movie);
+        EntityEntry<User> AddUser(User user);
     }
 }
