@@ -14,7 +14,6 @@ namespace BerrasBio.Models
         [MaxLength(12, ErrorMessage = "Kan inte boka fler än 12 biljetter")]
         public List<Ticket> Tickets { get; set; }
         [ForeignKey("User")]
-
         public int UserId { get; set; }
         public User User { get; set; }
     }

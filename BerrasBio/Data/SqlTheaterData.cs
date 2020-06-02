@@ -55,6 +55,12 @@ namespace BerrasBio.Data
             }
             return order;
         }
+        public void LoadOrder(Order order)
+        {
+          //  _context.Entry(order).Collection(o => o.Tickets).Load();
+            _context.Entry(order).Reference(o => o.User).Load();
+        }
+
 
         private User CreateUser()
         {
@@ -85,6 +91,7 @@ namespace BerrasBio.Data
             var order = await _context.Order
                 .FirstOrDefaultAsync(m => m.OrderId == Id);
             _context.Entry(order).Collection(s => s.Tickets).Load();
+            _context.Entry(order).Reference(o => o.User).Load();
             foreach (Ticket ticket in order.Tickets)
             {
                 _context.Entry(ticket).Reference(x => x.Seat).Load();

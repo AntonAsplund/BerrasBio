@@ -23,6 +23,11 @@ namespace BerrasBio.Controllers
             return View();
         }
 
+        public string LoginPage()
+        {
+            return "success";
+        }
+
         public IActionResult Privacy()
         {
             return View();

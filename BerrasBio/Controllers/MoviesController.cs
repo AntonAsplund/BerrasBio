@@ -25,6 +25,8 @@ namespace BerrasBio.Controllers
             return base.View(movies);
         }
 
+
+
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {

@@ -54,8 +54,10 @@ namespace BerrasBio.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OrderId,CustomerName")] Order order)
+        public async Task<IActionResult> Edit(int id, [Bind("OrderId,CustomerName,Tickets,UserId,User")] Order order)
         {
+            order = await sqlTheaterData.GetOrder(order.OrderId);
+            //sqlTheaterData.LoadOrder(order);
             if (id != order.OrderId)
             {
                 return NotFound();

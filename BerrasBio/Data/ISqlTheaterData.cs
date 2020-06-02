@@ -17,5 +17,6 @@ namespace BerrasBio.Data
         Task<int> Update(Order order);
         int Update();
         bool OrderExists(int id);
+        void LoadOrder(Order order);
     }
 }
