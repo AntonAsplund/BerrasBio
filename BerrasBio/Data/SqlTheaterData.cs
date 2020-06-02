@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -91,6 +92,12 @@ namespace BerrasBio.Data
             int ticketsSaved = _context.SaveChanges();
             return ticketsSaved;
         }
+
+        public EntityEntry<User> AddUser(User user)
+        {
+            return _context.Users.Add(user);
+        }
+
         public async Task<int> Update(Order order)
         {
             _context.Update(order);
