@@ -33,6 +33,17 @@ namespace BerrasBio.Data
             return await _context.Movies.ToListAsync();
         }
 
+        public async Task<User> OnGetUser(int? id)
+        {
+            User user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
+            return user;
+        }
+
+        public async Task<List<User>> OnGetUsers()
+        {
+            return await _context.Users.ToListAsync();
+        }
+
         public Order CreateOrder(List<int> seatIds, int viewingId)
         {
             User user = CreateUser();
@@ -148,5 +159,6 @@ namespace BerrasBio.Data
         {
             return _context.Order.Any(e => e.OrderId == id);
         }
+
     }
 }
