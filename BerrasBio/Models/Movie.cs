@@ -13,7 +13,6 @@ namespace BerrasBio.Models
         public string Title { get; set; }
         public int LengthMinute { get; set; }
         public bool IsPlaying { get; set; }
-        public string Description { get; set; }
         public string Cathegory { get; set; }
         public int ReleaseYear { get; set; }
         public string Plot { get; set; }
