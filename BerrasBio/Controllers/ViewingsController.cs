@@ -28,6 +28,9 @@ namespace BerrasBio.Controllers
             List<Viewing> viewings = await sqlTheaterData.GetViewingsById((int)id, order);
             return base.View(viewings);
         }
+
+
+
         public IActionResult Book(int? id)
         {
             string url = String.Format($"../../Seats/index/{id}");
