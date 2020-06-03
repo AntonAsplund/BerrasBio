@@ -4,14 +4,16 @@ using BerrasBio.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BerrasBio.Migrations
 {
     [DbContext(typeof(TeaterDbContext))]
-    partial class TeaterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200603130339_movieupdate3")]
+    partial class movieupdate3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

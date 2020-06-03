@@ -5,46 +5,56 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Filmer</h1>
+<h1>Movies</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LengthMinute)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsPlaying)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Cathegory)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LengthMinute)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsPlaying)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cathegory)
-            </td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.MovieId">Detaljer</a> |
-                <a asp-action="CheckView" asp-route-id="@item.MovieId" asp-route-order="Num">Visningar</a>
-            </td>
-        </tr>
+@foreach (var movie in Model)
+{
+<div class="mt-3 d-flex flex-row align-items-center border-bottom">
+    <div>
+        <img class="img-fluid" height="170" width="85" src="@movie.PosterURL" alt="@movie.Title poster image" />
+    </div>
+    <div class="text-container">
+        <h4><a asp-action="Details" asp-route-id="@movie.MovieId" class="text-decoration-none title">@movie.Title</a></h4>
+        
+        <span>
+                                                                   @movie.Cathegory  <strong>|</strong>
+                                                                   @movie.LengthMinute min  <strong>|</strong> PG:
+                                                                   @if (movie.PerentalGuidance == 0)
+                                                                   {
+                                                                       @:Universal
+                                                                   }
+                                                                   else
+                                                                   {
+                                                                       @movie.PerentalGuidance
+                                                                   }
+        </span>
+    </div>
+</div>
 }
-    </tbody>
-</table>
+
+<style>
+
+    .text-container
+    {
+        margin-left: 1em;
+        font-family:Arial, Helvetica, sans-serif;
+    }
+
+    div > img
+    {
+        border-radius: 5px;
+        margin-bottom: 0.5em;
+    }
+
+    .title
+    {
+        color: black;
+        font-weight: bold;
+    }
+
+    .title:hover
+    {
+        border-bottom: 2px solid black;
+        color: black;
+    }
+</style>

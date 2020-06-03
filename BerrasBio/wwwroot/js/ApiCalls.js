@@ -36,6 +36,7 @@ async function Search()
             document.getElementById("director").value = json.Director;
             document.getElementById("actors").value = json.Actors;
             document.getElementById("pg").value = pg[1];
+            document.getElementById("url").value = json.Poster;
 
             console.log(json.Director);
             console.log(json.Actors);
