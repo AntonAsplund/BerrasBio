@@ -35,38 +35,7 @@ namespace BerrasBio
                 cfg.UseSqlServer(Configuration.GetConnectionString("BerrasConnectionString")); 
             });
             services.AddScoped<ISqlTheaterData, SqlTheaterData>();
-            //services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            //    .AddJwtBearer(options =>
-            //        options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-            //        {
-            //            ValidateIssuer = true,
-            //            ValidateAudience = true,
-            //            ValidateLifetime = true,
-            //            ValidateIssuerSigningKey = true,
-            //            ValidIssuer = Configuration["Jwt:Issuer"],
-            //            ValidAudience = Configuration["Jwt:Issuer"],
-            //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-            //        }
-            //    )
-            //    .AddCookie("Cookies")
-            //    .AddOpenIdConnect("oidc", options =>
-            //    {
-            //        options.SignInScheme = "Cookies";
-
-            //        options.Authority = "http://localhost:5000";
-            //        options.RequireHttpsMetadata = false;
-
-            //        options.ClientId = "testclient";
-            //        options.ClientSecret = "secret";
-            //        options.ResponseType = "code id_token";
-            //        options.SaveTokens = true;
-            //        options.GetClaimsFromUserInfoEndpoint = true;
-            //        options.ClaimActions.MapUniqueJsonKey("IsAdmin", "IsAdmin");
-            //        options.Scope.Add("testapi");
-            //        options.Scope.Add("offline_access");
-            //    });
-
-
+            
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o => o.LoginPath = new PathString("/Users/Login"));
 
@@ -100,7 +69,7 @@ namespace BerrasBio
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-           
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
