@@ -64,9 +64,12 @@ namespace BerrasBio
                         //Re-execute the request so the user gets the error page
                         string originalPath = ctx.Request.Path.Value;
                         ctx.Items["originalPath"] = originalPath;
-                        ctx.Request.Path = "/error/404";
-                        await next();
+                        //ctx.Request.Path = "~/error/404";
+                        ctx.Response.Redirect("/error/404");
+                        //await next();
                     }
+
+                    
                 });
             }
             else
