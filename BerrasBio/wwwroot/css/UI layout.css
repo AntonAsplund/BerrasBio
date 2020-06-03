@@ -15,5 +15,13 @@
 .gray-box {
     background-color: darkgray;
     border-radius: 5px;
+    margin-bottom: 10em;
 }
 
+.extraPaddingT2 {
+    padding-top: 2em;
+}
+
+.extraPaddingB5 {
+    padding-bottom: 5em;
+}

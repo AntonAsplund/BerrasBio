@@ -54,10 +54,24 @@ namespace BerrasBio
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+
+                app.Use(async (ctx, next) =>
+                {
+                    await next();
+
+                    if (ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
+                    {
+                        //Re-execute the request so the user gets the error page
+                        string originalPath = ctx.Request.Path.Value;
+                        ctx.Items["originalPath"] = originalPath;
+                        ctx.Request.Path = "/error/404";
+                        await next();
+                    }
+                });
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error/404");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -74,6 +88,8 @@ namespace BerrasBio
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            
         }
     }
 }
