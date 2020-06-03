@@ -54,6 +54,16 @@
             </div>
 
             <div class="form-group">
+                <label asp-for="Director" class="control-label"></label>
+                <input asp-for="Director" class="form-control" id="director" readonly />
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Actors" class="control-label"></label>
+                <input asp-for="Actors" class="form-control" id="actors" readonly />
+            </div>
+
+            <div class="form-group">
                 <label asp-for="PerentalGuidance" class="control-label"></label>
                 <input asp-for="PerentalGuidance" class="form-control" id="pg" readonly />
             </div>
@@ -65,5 +75,5 @@
     </div>
 </div>
 
-<script src="~/js/ApiCalls.js"></script>
+<script src="~/js/ApiCalls.js" asp-append-version="true"></script>
 
