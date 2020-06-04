@@ -48,8 +48,9 @@ namespace BerrasBio.Data
         public Order CreateOrder(List<int> seatIds, int viewingId)
         {
             User user = CreateUser();
+            user.UserName = "Unknown";
             Order order = new Order();
-            order.CustomerName = "Unknown";
+            //order.CustomerName = "Unknown";
             //_context.Add(ticket);
             order.Tickets = new List<Ticket>();
             _context.Add(order);

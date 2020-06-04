@@ -10,7 +10,7 @@ namespace BerrasBio.Models
     public class Order
     {
         public int OrderId { get; set; }
-        public string CustomerName { get; set; }
+        //public string CustomerName { get; set; }
         [MaxLength(12, ErrorMessage = "Kan inte boka fler än 12 biljetter")]
         public List<Ticket> Tickets { get; set; }
         [ForeignKey("User")]
