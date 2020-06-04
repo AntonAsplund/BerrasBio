@@ -34,6 +34,9 @@ namespace BerrasBio.Controllers
             }
             return base.View(viewings);
         }
+
+
+
         public IActionResult Book(int? id)
         {
             string url = String.Format($"../../Seats/index/{id}");

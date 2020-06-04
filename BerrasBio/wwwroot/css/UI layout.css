@@ -1,0 +1,27 @@
+﻿#menuIcon {
+    height: 3em;
+    width: 3em;
+}
+
+#layoutBackground {
+    background-color: none !important;
+    background-image: url('../Assets/Images/backgroundImage.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+}
+
+.gray-box {
+    background-color: darkgray;
+    border-radius: 5px;
+    margin-bottom: 10em;
+}
+
+.extraPaddingT2 {
+    padding-top: 2em;
+}
+
+.extraPaddingB5 {
+    padding-bottom: 5em;
+}
