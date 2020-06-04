@@ -4,14 +4,16 @@ using BerrasBio.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BerrasBio.Migrations
 {
     [DbContext(typeof(TeaterDbContext))]
-    partial class TeaterDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200603130339_movieupdate3")]
+    partial class movieupdate3
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -67,6 +69,9 @@ namespace BerrasBio.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CustomerName")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -150,14 +155,8 @@ namespace BerrasBio.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<bool>("IsAdmin")
                         .HasColumnType("bit");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .HasColumnType("nvarchar(max)");
@@ -166,13 +165,9 @@ namespace BerrasBio.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("UserId");
-
-                    b.HasIndex("UserName")
-                        .IsUnique()
-                        .HasFilter("[UserName] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
