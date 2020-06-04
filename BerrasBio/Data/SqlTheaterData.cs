@@ -169,9 +169,15 @@ namespace BerrasBio.Data
                     }
                 }
             }
-            
+
+            int viewingId = Seats.First().ViewingId;
+           // Viewing viewing = _context.Viewings.Find(viewingId);
+           // _context.Entry(viewing).Reference(v => v.Movie).Load();
+           // Seats.First().MovieTitle = viewing.Movie.Title;
+
             return Seats;
         }
+
 
 
         public bool OrderExists(int id)
