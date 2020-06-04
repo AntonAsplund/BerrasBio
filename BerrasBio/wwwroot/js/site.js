@@ -12,7 +12,7 @@ const callback = event => {
     function mark_page_dirty() {
         dirty_bit.value = '1';
     }
-    for (var i = 1; i < 51; i++) {
+    for (var i = 1; i < 101; i++) {
 
         let seat_container = document.getElementById(i);
         if (seat_container != null) {
