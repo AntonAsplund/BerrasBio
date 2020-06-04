@@ -23,5 +23,7 @@ namespace BerrasBio.Data
         void LoadOrder(Order order);
         Movie AddMovie(Movie movie);
         EntityEntry<User> AddUser(User user);
+        List<Salon> GetSalons();
+        bool CreateViewing(Viewing viewing);
     }
 }

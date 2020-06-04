@@ -185,5 +185,17 @@ namespace BerrasBio.Data
             return movie;
         }
 
+        public List<Salon> GetSalons()
+        {
+            return _context.Salons.ToList();
+        }
+
+        public bool CreateViewing(Viewing viewing)
+        {
+            _context.Viewings.Add(viewing);
+            _context.SaveChanges();
+            return true;
+        }
+
     }
 }
