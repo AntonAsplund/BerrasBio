@@ -9,6 +9,7 @@ using BerrasBio.Data;
 using BerrasBio.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using BerrasBio.Security;
 
 namespace BerrasBio.Controllers
 {
@@ -23,7 +24,8 @@ namespace BerrasBio.Controllers
         // GET: Movies
         public async Task<IActionResult> Index()
         {
-            bool isAdmin = CheckIfAdmin();
+            AuthHandler.CheckIfAdmin(this);
+            bool isAdmin = AuthHandler.CheckIfAdmin(this);
             if (isAdmin)
             {
                 return Redirect(String.Format($"../../Movies/indexAdmin"));
@@ -36,17 +38,6 @@ namespace BerrasBio.Controllers
             }
         }
 
-        private bool CheckIfAdmin()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            IList<Claim> claim = identity.Claims.ToList();
-            bool isAdmin = false;
-            if (claim != null && claim.Count > 0)
-            {
-                isAdmin = claim[1].Value == "Admin";
-            }
-            return isAdmin;
-        }
 
         // GET: Movies
         [Authorize]
@@ -89,7 +80,7 @@ namespace BerrasBio.Controllers
         [Authorize]
         public IActionResult Create()
         {
-            bool isAdmin = CheckIfAdmin();
+            bool isAdmin = AuthHandler.CheckIfAdmin(this);
             if (isAdmin)
             {
                 return View();
