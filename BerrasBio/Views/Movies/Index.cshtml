@@ -5,32 +5,32 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Movies</h1>
+<h1 class="movies">Movies</h1>
 
-@foreach (var movie in Model)
-{
-<div class="mt-3 d-flex flex-row align-items-center border-bottom">
-    <div>
-        <img class="img-fluid" height="170" width="85" src="@movie.PosterURL" alt="@movie.Title poster image" />
-    </div>
-    <div class="text-container">
-        <h4><a asp-action="Details" asp-route-id="@movie.MovieId" class="text-decoration-none title">@movie.Title</a></h4>
-        
-        <span>
-                                                                   @movie.Cathegory  <strong>|</strong>
-                                                                   @movie.LengthMinute min  <strong>|</strong> PG:
-                                                                   @if (movie.PerentalGuidance == 0)
-                                                                   {
-                                                                       @:Universal
-                                                                   }
-                                                                   else
-                                                                   {
-                                                                       @movie.PerentalGuidance
-                                                                   }
-        </span>
-    </div>
-</div>
-}
+    @foreach (var movie in Model)
+    {
+        <div class="mt-3 d-flex flex-row align-items-center border-sep">
+            <div>
+                <img class="img-fluid" height="170" width="85" src="@movie.PosterURL" alt="@movie.Title poster image" />
+            </div>
+            <div class="text-container">
+                <h4><a asp-action="Details" asp-route-id="@movie.MovieId" class="text-decoration-none title">@movie.Title</a></h4>
+
+                <span class="details">
+                    @movie.Cathegory  <strong>|</strong>
+                    @movie.LengthMinute min  <strong>|</strong> PG:
+                    @if (movie.PerentalGuidance == 0)
+                    {
+                        @:Universal
+                    }
+                    else
+                    {
+                        @movie.PerentalGuidance
+                    }
+                </span>
+            </div>
+        </div>
+    }
 
 <style>
 
@@ -48,13 +48,39 @@
 
     .title
     {
-        color: black;
+        color: #F2F2F2;
         font-weight: bold;
     }
 
     .title:hover
     {
-        border-bottom: 2px solid black;
-        color: black;
+        border-bottom: 2px solid #F2F2F2;
+        color: #F2F2F2;
+    }
+
+    .container
+    {
+        background-color:transparent;
+    }
+
+    #layoutBackground
+    {
+        background-image: none;
+        background-color:black;
+    }
+
+    .movies
+    {
+        color: #F2F2F2;
+    }
+
+    .border-sep
+    {
+        border-bottom: 1px solid #646464;
+    }
+
+    .details
+    {
+        color: #D5D5D5;
     }
 </style>
