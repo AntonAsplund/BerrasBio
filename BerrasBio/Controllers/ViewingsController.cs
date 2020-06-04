@@ -52,7 +52,7 @@ namespace BerrasBio.Controllers
 
         public async Task<IActionResult> Create()
         {
-            List<Movie> movies = await sqlTheaterData.OnGetMovies();
+            List<Movie> movies = await sqlTheaterData.OnGetMovies(includeOld: true);
             List<Salon> salons = sqlTheaterData.GetSalons();
             var model = new CreateViewingViewModel { Movies = movies, Salons = salons };
             return View(model);

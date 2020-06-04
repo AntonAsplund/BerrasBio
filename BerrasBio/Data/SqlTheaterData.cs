@@ -29,9 +29,17 @@ namespace BerrasBio.Data
             return movie;
         }
 
-        public async Task<List<Movie>> OnGetMovies()
+        public async Task<List<Movie>> OnGetMovies(bool includeOld)
         {
-            return await _context.Movies.ToListAsync();
+            if (includeOld)
+            {
+                return await _context.Movies.ToListAsync();
+            }
+            else
+            {
+                return await _context.Movies.Where(m => m.IsPlaying).ToListAsync();
+
+            }
         }
 
         public async Task<User> OnGetUser(int? id)
@@ -177,9 +185,27 @@ namespace BerrasBio.Data
 
             return Seats;
         }
-
-
-
+        public async Task<Movie> FindMovie(int? id)
+        {
+            return await _context.Movies.FindAsync(id);
+        }
+        public async Task UpdateMovie(Movie movie)
+        {
+            _context.Update(movie);
+            await _context.SaveChangesAsync();
+        }
+        public async Task DeleteMovieAt(int id)
+        {
+            var movie = await _context.Movies.FindAsync(id);
+            //_context.Movies.Remove(movie);
+            movie.IsPlaying = false;
+            _context.Update(movie);
+            await _context.SaveChangesAsync();
+        }
+        public bool DoesMovieExist(int id)
+        {
+            return _context.Movies.Any(e => e.MovieId == id);
+        }
         public bool OrderExists(int id)
         {
             return _context.Order.Any(e => e.OrderId == id);

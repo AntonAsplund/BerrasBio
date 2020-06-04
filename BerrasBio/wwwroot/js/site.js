@@ -1,8 +1,6 @@
 ﻿// Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 // for details on configuring this project to bundle and minify static web assets.
-
 // Write your JavaScript code.
-
 let checkboxValues = [];
 let numTickets = 0;
 const callback = event => {
@@ -13,7 +11,6 @@ const callback = event => {
         dirty_bit.value = '1';
     }
     for (var i = 1; i < 101; i++) {
-
         let seat_container = document.getElementById(i);
         if (seat_container != null) {
             const newLocal = `#${i} .check-seat`;
@@ -48,10 +45,7 @@ const callback = event => {
                 }
             }
         }
-
     }
     mark_page_dirty();
 }
-
-
 window.addEventListener('load', callback);

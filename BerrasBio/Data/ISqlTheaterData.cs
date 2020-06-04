@@ -10,7 +10,7 @@ namespace BerrasBio.Data
     public interface ISqlTheaterData
     {
         Task<Movie> OnGetMovie(int? id);
-        Task<List<Movie>> OnGetMovies();
+        Task<List<Movie>> OnGetMovies(bool includeOld);
         Task<User> OnGetUser(int? id);
         Task<List<User>> OnGetUsers();
         Task<List<Seat>> FindSeats(int id);
@@ -25,5 +25,9 @@ namespace BerrasBio.Data
         EntityEntry<User> AddUser(User user);
         List<Salon> GetSalons();
         bool CreateViewing(Viewing viewing);
+        Task<Movie> FindMovie(int? id);
+        Task UpdateMovie(Movie movie);
+        Task DeleteMovieAt(int id);
+        bool DoesMovieExist(int id);
     }
 }

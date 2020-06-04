@@ -184,14 +184,16 @@ namespace BerrasBio.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([Bind("UserId,UserName,Password,IsAdmin,PhoneNumber")] User user)
         {
-        
+            User loggedInUser = _context.Users.Where(u => u.UserName == user.UserName).FirstOrDefault();
+
+
             IActionResult response = Unauthorized();
             User atuenticatedUser = await AuthenticateUserAsync(user);
-            if (user != null)
+            if (loggedInUser != null)
             {
 
-                var claims = new[] { new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User") };
+                var claims = new[] { new Claim(ClaimTypes.Name, loggedInUser.UserName),
+                    new Claim(ClaimTypes.Role, loggedInUser.IsAdmin ? "Admin" : "User") };
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));

@@ -23,12 +23,49 @@ namespace BerrasBio.Controllers
         // GET: Movies
         public async Task<IActionResult> Index()
         {
-            List<Movie> movies = await sqlTheaterData.OnGetMovies();
-            return base.View(movies);
+            bool isAdmin = CheckIfAdmin();
+            if (isAdmin)
+            {
+                return Redirect(String.Format($"../../Movies/indexAdmin"));
+
+            }
+            else
+            {
+                List<Movie> movies = await sqlTheaterData.OnGetMovies(includeOld: false);
+                return base.View(movies);
+            }
         }
 
+        private bool CheckIfAdmin()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
+            bool isAdmin = false;
+            if (claim != null && claim.Count > 0)
+            {
+                isAdmin = claim[1].Value == "Admin";
+            }
+            return isAdmin;
+        }
 
-
+        // GET: Movies
+        [Authorize]
+        public async Task<IActionResult> IndexAdmin()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
+            //int userId = Convert.ToInt32(claim[0].Value);
+            bool isAdmin = claim[1].Value == "Admin";
+            if (isAdmin)
+            {
+                List<Movie> movies = await sqlTheaterData.OnGetMovies(includeOld: true);
+                return base.View(movies);
+            }
+            else
+            {
+                return StatusCode(403);
+            }
+        }
         // GET: Movies/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -49,10 +86,18 @@ namespace BerrasBio.Controllers
             return Redirect(String.Format($"../../Viewings/index?id={id}&order={order}"));
             //return Redirect(String.Format($"../../Viewings/index/{id}/{order}"));
         }
-
+        [Authorize]
         public IActionResult Create()
         {
-            return View();
+            bool isAdmin = CheckIfAdmin();
+            if (isAdmin)
+            {
+                return View();
+            }
+            else
+            {
+                return StatusCode(403);
+            }
         }
 
         [HttpPost]
@@ -62,5 +107,86 @@ namespace BerrasBio.Controllers
             TempData["Message"] = "Movie was added successfully to the database!";
             return RedirectToAction("Create");
         }
+
+        // GET: Movies/Edit/5
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            var movie = await sqlTheaterData.FindMovie(id);
+            if (movie == null)
+            {
+                return NotFound();
+            }
+            return View(movie);
+        }
+        // POST: Movies/Edit/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("MovieId,Title,LengthMinute,IsPlaying,Cathegory")] Movie movie)
+        {
+            if (id != movie.MovieId)
+            {
+                return NotFound();
+            }
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await sqlTheaterData.UpdateMovie(movie);
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!MovieExists(movie.MovieId))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(movie);
+        }
+
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var order = await sqlTheaterData.FindMovie(id);
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            return View(order);
+        }
+
+        // POST: Movies/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            await sqlTheaterData.DeleteMovieAt(id);
+            return RedirectToAction(nameof(Index));
+        }
+
+       
+
+        private bool MovieExists(int id)
+        {
+            return sqlTheaterData.DoesMovieExist(id);
+        }
+
+        
     }
 }

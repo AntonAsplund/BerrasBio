@@ -1,0 +1,63 @@
+﻿@model IEnumerable<BerrasBio.Models.Movie>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Movies</h1>
+
+<p>
+    <a asp-action="Create">Lägg till film</a>
+</p>
+@foreach (var movie in Model)
+{
+<div class="mt-3 d-flex flex-row align-items-center border-bottom">
+    <div>
+        <img class="img-fluid" height="170" width="85" src="@movie.PosterURL" alt="@movie.Title poster image" />
+    </div>
+    <div class="text-container">
+        <h4><a asp-action="Details" asp-route-id="@movie.MovieId" class="text-decoration-none title">@movie.Title</a></h4>
+
+        <span>
+            @movie.Cathegory  <strong>|</strong>
+            @movie.LengthMinute min  <strong>|</strong> PG:
+            @if (movie.PerentalGuidance == 0)
+            {
+                @:Universal
+            }
+            else
+            {
+                @movie.PerentalGuidance
+            }
+        </span>
+    </div>
+
+
+    <a asp-action="Edit" asp-route-id="@movie.MovieId">Edit</a> |
+    <a asp-action="Delete" asp-route-id="@movie.MovieId">Delete</a>
+</div>
+}
+
+<style>
+
+    .text-container {
+        margin-left: 1em;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    div > img {
+        border-radius: 5px;
+        margin-bottom: 0.5em;
+    }
+
+    .title {
+        color: black;
+        font-weight: bold;
+    }
+
+        .title:hover {
+            border-bottom: 2px solid black;
+            color: black;
+        }
+</style>
