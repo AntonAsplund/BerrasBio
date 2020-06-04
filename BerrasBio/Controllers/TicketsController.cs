@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BerrasBio.Data;
 using BerrasBio.Models;
+using Microsoft.AspNetCore.Authorization;
+using BerrasBio.Security;
 
 namespace BerrasBio.Controllers
 {
@@ -20,6 +22,7 @@ namespace BerrasBio.Controllers
         }
 
         // GET: Tickets
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Tickets.ToListAsync());
@@ -44,15 +47,17 @@ namespace BerrasBio.Controllers
         }
 
         // GET: Tickets/Create
+        [Authorize]
         public IActionResult Create()
         {
-            return View();
+            return AuthHandler.RedirectToView(this);
         }
 
         // POST: Tickets/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TicketId,Date,SeatId,ViewingId")] Ticket ticket)
         {
@@ -62,7 +67,7 @@ namespace BerrasBio.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(ticket);
+            return View();
         }
 
         // GET: Tickets/Edit/5
@@ -78,7 +83,7 @@ namespace BerrasBio.Controllers
             {
                 return NotFound();
             }
-            return View(ticket);
+            return AuthHandler.RedirectToView(this);
         }
 
         // POST: Tickets/Edit/5

@@ -38,12 +38,7 @@ namespace BerrasBio.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
-
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            IList<Claim> claim = identity.Claims.ToList();
-            //int userId = Convert.ToInt32(claim[0].Value);
-            bool isAdmin = claim[1].Value == "Admin";
-            if (isAdmin)
+            if (AuthHandler.CheckIfAdmin(this))
             {
                 List<User> users = await sqlTheaterData.OnGetUsers();
                 return base.View(users);
@@ -142,9 +137,12 @@ namespace BerrasBio.Controllers
         }
 
         // GET: Users/Create
-        [Authorize]
         public IActionResult Create()
         {
+            if (AuthHandler.CheckIfAdmin(this))
+            {
+                return Redirect(String.Format($"../../Users/CreateAdmin"));
+            }
             return View();
         }
 
@@ -154,9 +152,43 @@ namespace BerrasBio.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,UserName,Password,IsAdmin,PhoneNumber")] User user)
+        public async Task<IActionResult> Create([Bind("UserId,UserName,FirstName,LastName,Password,PhoneNumber")] User user)
         {
-            if (ModelState.IsValid)
+            bool hasDublicates = _context.Users.Where(u => u.UserName == user.UserName).Any();
+            if (TryValidateModel(user) && !hasDublicates)
+            {
+                user.IsAdmin = false;
+                user.Password = Encryption.EncryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
+                //user.Password = Encryption.EncryptString(configuration["Jwt:Key"], user.Password);
+                Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<User> entityEntry = sqlTheaterData.AddUser(user);
+                await _context.SaveChangesAsync();
+
+
+                return RedirectToAction(nameof(Details), new { id = user.UserId });
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
+        }
+        // GET: Users/Create
+        [Authorize]
+        public IActionResult CreateAdmin()
+        {
+            return AuthHandler.RedirectToView(this);
+        }
+
+
+        // POST: Users/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
+        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize]
+        public async Task<IActionResult> CreateAdmin([Bind("UserId,UserName,FirstName,LastName,Password,IsAdmin,PhoneNumber")] User user)
+        {
+            bool hasDublicates = _context.Users.Where(u => u.UserName == user.UserName).Any();
+            if (TryValidateModel(user) && !hasDublicates)
             {
                 user.Password = Encryption.EncryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
                 //user.Password = Encryption.EncryptString(configuration["Jwt:Key"], user.Password);
@@ -171,6 +203,8 @@ namespace BerrasBio.Controllers
                 return BadRequest(ModelState);
             }
         }
+
+
         public IActionResult Login()
         {
             return View();
@@ -185,7 +219,10 @@ namespace BerrasBio.Controllers
         public async Task<IActionResult> Login([Bind("UserId,UserName,Password,IsAdmin,PhoneNumber")] User user)
         {
             User loggedInUser = _context.Users.Where(u => u.UserName == user.UserName).FirstOrDefault();
-
+            if (user.UserId == 0)
+            {
+                return Redirect(String.Format($"../../Users/Login"));
+            }
 
             IActionResult response = Unauthorized();
             User atuenticatedUser = await AuthenticateUserAsync(user);
@@ -193,7 +230,7 @@ namespace BerrasBio.Controllers
             {
 
                 var claims = new[] { new Claim(ClaimTypes.Name, loggedInUser.UserName),
-                    new Claim(ClaimTypes.Role, loggedInUser.IsAdmin ? "Admin" : "User") };
+                    new Claim(ClaimTypes.Role, loggedInUser.IsAdmin ? "Admin" : "User")};
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));

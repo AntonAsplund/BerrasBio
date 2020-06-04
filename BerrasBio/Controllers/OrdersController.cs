@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BerrasBio.Data;
 using BerrasBio.Models;
+using Microsoft.AspNetCore.Authorization;
+using BerrasBio.Security;
 
 namespace BerrasBio.Controllers
 {
@@ -20,6 +22,7 @@ namespace BerrasBio.Controllers
         }
 
         // GET: Orders
+        [Authorize]
         public async Task<IActionResult> Index(int? Id)
         {
             if (Id == null)
@@ -31,6 +34,10 @@ namespace BerrasBio.Controllers
             if (order == null)
             {
                 return NotFound();
+            }
+            if (!AuthHandler.CheckIfCorrectUser(order.User.UserName, this))
+            {
+                return StatusCode(403);
             }
             return base.View(order);
         }
