@@ -25,20 +25,19 @@ namespace BerrasBio.Data
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.UserName)
+                .IsUnique();
             modelBuilder.Entity<Ticket>()
                 .HasOne<Viewing>(s => s.Viewing)
                 .WithMany(ta => ta.Tickets)
                 .HasForeignKey(u => u.ViewingId)
                 .OnDelete(DeleteBehavior.NoAction);
-
             var cascadeFKs = modelBuilder.Model.GetEntityTypes()
         .SelectMany(t => t.GetForeignKeys())
         .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
-
             foreach (var fk in cascadeFKs)
                 fk.DeleteBehavior = DeleteBehavior.Restrict;
-
-
             base.OnModelCreating(modelBuilder);
         }
 
