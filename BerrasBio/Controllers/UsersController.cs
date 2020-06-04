@@ -17,6 +17,7 @@ using RestSharp;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using System.Net;
 
 namespace BerrasBio.Controllers
 {
@@ -34,10 +35,23 @@ namespace BerrasBio.Controllers
         }
 
         // GET: Users
+        [Authorize]
         public async Task<IActionResult> Index()
         {
-            List<User> users = await sqlTheaterData.OnGetUsers();
-            return base.View(users);
+
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
+            //int userId = Convert.ToInt32(claim[0].Value);
+            bool isAdmin = claim[1].Value == "Admin";
+            if (isAdmin)
+            {
+                List<User> users = await sqlTheaterData.OnGetUsers();
+                return base.View(users);
+            }
+            else
+            {
+                return StatusCode(403);
+            }
         }
 
         // GET: Users/Details/5
@@ -150,9 +164,12 @@ namespace BerrasBio.Controllers
                 await _context.SaveChangesAsync();
 
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new { id = user.UserId });
             }
-            return View(user);
+            else
+            {
+                return BadRequest(ModelState);
+            }
         }
         public IActionResult Login()
         {
@@ -167,31 +184,16 @@ namespace BerrasBio.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([Bind("UserId,UserName,Password,IsAdmin,PhoneNumber")] User user)
         {
-        //    if (ModelState.IsValid)
-        //    {
-        //        user.Password = Encryption.EncryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
-        //        //user.Password = Encryption.EncryptString(configuration["Jwt:Key"], user.Password);
-        //        Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<User> entityEntry = sqlTheaterData.AddUser(user);
-        //        await _context.SaveChangesAsync();
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    return View(user);
-
-
-
-            //User userLoging = new User();
-            //userLoging.UserName = username;
-            //userLoging.Password = password;
+        
             IActionResult response = Unauthorized();
             User atuenticatedUser = await AuthenticateUserAsync(user);
             if (user != null)
             {
-                var claims = new[] { new Claim(ClaimTypes.Name, "MyUserNameOrID"),
-                    new Claim(ClaimTypes.Role, "SomeRoleName") };
+
+                var claims = new[] { new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User") };
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
                 return Redirect(String.Format($"../../Users/Accepted"));
 
