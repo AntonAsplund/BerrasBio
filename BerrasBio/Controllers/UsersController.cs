@@ -219,7 +219,7 @@ namespace BerrasBio.Controllers
         public async Task<IActionResult> Login([Bind("UserId,UserName,Password,IsAdmin,PhoneNumber")] User user)
         {
             User loggedInUser = _context.Users.Where(u => u.UserName == user.UserName).FirstOrDefault();
-            if (user.UserId == 0)
+            if (loggedInUser.UserId == 0)
             {
                 return Redirect(String.Format($"../../Users/Login"));
             }

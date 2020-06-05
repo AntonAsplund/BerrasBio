@@ -26,5 +26,13 @@ namespace BerrasBio.Controllers
 
             return View();
         }
+
+        [Route("401")]
+        public IActionResult Forbidden(string path)
+        {
+            TempData["path"] = path;
+
+            return View();
+        }
     }
 }
