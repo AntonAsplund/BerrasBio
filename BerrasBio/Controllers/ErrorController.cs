@@ -20,7 +20,7 @@ namespace BerrasBio.Controllers
         }
 
         [Route("403")]
-        public IActionResult NotAuthorized(string path)
+        public IActionResult Forbidden(string path)
         {
             TempData["path"] = path;
 
@@ -28,7 +28,7 @@ namespace BerrasBio.Controllers
         }
 
         [Route("401")]
-        public IActionResult Forbidden(string path)
+        public IActionResult NotAuthorized(string path)
         {
             TempData["path"] = path;
 
