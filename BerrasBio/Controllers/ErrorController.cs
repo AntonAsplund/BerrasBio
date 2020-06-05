@@ -12,15 +12,17 @@ namespace BerrasBio.Controllers
     {
 
         [Route("404")]
-        public IActionResult PageNotFound()
+        public IActionResult PageNotFound(string path)
         {
-            string originalPath = "unknown";
-            if (HttpContext.Items.ContainsKey("originalPath"))
-            {
-                originalPath = HttpContext.Items["originalPath"] as string;
-            }
+            TempData["path"] = path;
 
-            TempData["path"] = originalPath;
+            return View();
+        }
+
+        [Route("403")]
+        public IActionResult NotAuthorized(string path)
+        {
+            TempData["path"] = path;
 
             return View();
         }
