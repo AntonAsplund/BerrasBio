@@ -29,5 +29,6 @@ namespace BerrasBio.Data
         Task UpdateMovie(Movie movie);
         Task DeleteMovieAt(int id);
         bool DoesMovieExist(int id);
+        bool MovieHasViewings(int movieId);
     }
 }

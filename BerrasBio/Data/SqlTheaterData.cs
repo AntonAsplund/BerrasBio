@@ -155,6 +155,12 @@ namespace BerrasBio.Data
             }
         }
 
+        public bool MovieHasViewings(int movieId)
+        {
+            return _context.Viewings.Where(v => v.MovieId == movieId).Any();
+
+        }
+
         public async Task<List<Seat>> FindSeats(int id)
         {
 

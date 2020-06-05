@@ -70,6 +70,9 @@ namespace BerrasBio.Controllers
             {
                 return NotFound();
             }
+
+            TempData["HasViews"] = sqlTheaterData.MovieHasViewings((int)id);
+
             return View(movie);
         }
         public IActionResult CheckView(int? id, string order)
