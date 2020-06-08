@@ -28,7 +28,7 @@
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Movies">Movies</a>
                         </li>
 
-                        @if (User.Identity.IsAuthenticated)
+                        @if (User.Identity.IsAuthenticated && User.Claims.ToList()[1].Value == "Admin")
                         {
                             <li class="nav-item">
                                 <a class="nav-link text-white" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
