@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BerrasBio", "BerrasBio\BerrasBio.csproj", "{BD5A39BC-EB54-4843-A128-BE3387C14029}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BerrasApi", "BerrasApi\TestAuth\BerrasApi.csproj", "{16CA69AC-8BA1-4B41-B968-965FD8C64F07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestAuth", "BerrasApi\TestAuth\TestAuth.csproj", "{16CA69AC-8BA1-4B41-B968-965FD8C64F07}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
