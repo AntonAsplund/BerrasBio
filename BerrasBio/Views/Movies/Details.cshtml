@@ -1,57 +1,125 @@
-﻿@model BerrasBio.Models.Movie
-
+﻿@model BerrasBio.ViewModels.DetailsViewModel
 @{
     ViewData["Title"] = "Details";
 }
-
 <div>
-    <div class="d-flex flex-row align-items-end" style="background-color:white;">
+    <div class="d-flex flex-row align-items-end">
 
         <div>
-            <img class="img-fluid" height="300" width="200" src="@Model.PosterURL" alt="@Model.Title poster image" />
+            <img class="img-fluid" height="300" width="200" src="@Model.Movie.PosterURL" alt="@Model.Movie.Title poster image" />
         </div>
 
         <div class="header-title">
-            <h3>@Model.Title</h3>
-            <span class="font-weight-bold">@Model.Cathegory</span> <br />
-            <span>
-                @Model.LengthMinute min | PG:
-                @if (Model.PerentalGuidance == 0)
+            <h3 class="movie-title">@Model.Movie.Title</h3>
+            <span class="font-weight-bold movie-title">@Model.Movie.Cathegory</span> <br />
+            <span class="movie-cat">
+                @Model.Movie.LengthMinute min | PG:
+                @if (Model.Movie.PerentalGuidance == 0)
                 {
                     @:Universal
                 }
                 else
                 {
-                    @Model.PerentalGuidance
+                    @Model.Movie.PerentalGuidance
                 }
             </span>
         </div>
+
     </div>
 
-    <div class="mt-5">
-        <p>@Model.Plot</p>
-        <span><strong>Director: </strong><br />@Model.Director</span> <br /><br />
-        <span><strong>Actors: </strong><br />@Model.Actors</span> <br /><br />
-        <span><strong>Release: </strong><br />@Model.ReleaseYear</span>
+    <div class="mt-5 movie-title">
+        <p>@Model.Movie.Plot</p>
+        <span><text class="movie-cat">Director: </text><br />@Model.Movie.Director</span> <br /><br />
+        <span><text class="movie-cat">Actors: </text><br />@Model.Movie.Actors</span> <br /><br />
+        <span><text class="movie-cat">Release: </text><br />@Model.Movie.ReleaseYear</span>
     </div>
-    <div class="mt-3">
-        <a asp-action="CheckView" asp-route-id="@Model.MovieId" asp-route-order="Num" class="btn btn-outline-dark">Visningar</a>
-    </div>
-
 </div>
+
+@if (Model.Viewings.Count == 0)
+{
+    <h3 class="movie-title mt-5">Inga visningar</h3>
+}
+
+else
+{
+
+    <h3 class="movie-title mt-5">Visningar</h3>
+
+    <table class="table mt-4">
+        <thead>
+            <tr>
+                <th>
+                    <a asp-action="CheckView" asp-route-id="@Model.Movie.MovieId" asp-route-order="Time" class="movie-title font-weight-bold">Start tid</a>
+
+
+                </th>
+                <th class="movie-title">
+                    Salong
+                </th>
+                <th>
+                    <a asp-action="CheckView" asp-route-id="@Model.Movie.MovieId" asp-route-order="Num" class="movie-title font-weight-bold">Platser kvar</a>
+
+
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Viewings)
+            {
+                <tr class="movie-cat">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FormatedStartTime)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Salon.Name)
+                    </td>
+                    <td>
+
+                        @item.SeatsLeft
+                    </td>
+                    <td>
+                        <a asp-controller="Viewings" asp-action="Book" asp-route-id="@item.ViewingId" class="btn btn-danger">Boka biljetter</a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+
 <div>
-    <a asp-action="Index" class="btn btn-dark mt-5">Back</a>
+    <a asp-action="Index" class="btn btn-dark mt-3">Back</a>
 </div>
-
 <style>
-    div > img
-    {
+    div > img {
         border-radius: 5px;
+        border: 0.5px solid white;
     }
 
-    .header-title
-    {
+    .header-title {
         margin-left: 1em;
     }
 
+    .container {
+        background-color: transparent;
+    }
+
+    #layoutBackground {
+        background-image: none;
+        background-color: black;
+    }
+
+    .movie-title {
+        color: #F5F5F5;
+    }
+
+    .movie-cat {
+        color: #CFCFCF;
+    }
+
+    .btn {
+        cursor: pointer;
+    }
 </style>

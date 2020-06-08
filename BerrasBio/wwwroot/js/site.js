@@ -27,7 +27,7 @@ const callback = event => {
                                 checkbox.checked = false;
                             } else {
                                 if (numTickets < 12) {
-                                    seat_container.style.backgroundColor = "blue";
+                                    seat_container.style.backgroundColor = "yellow";
                                     checkbox.checked = true;
                                     numTickets++;
                                 } else {
@@ -40,7 +40,6 @@ const callback = event => {
                     });
                 } else {
                     checkbox.checked = false;
-                    checkbox.style.display = "none";
                     seat_container.style.backgroundColor = "red";
                 }
             }

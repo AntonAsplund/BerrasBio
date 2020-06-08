@@ -16,9 +16,9 @@
 <div>
     <form method="post">
 
-        <select name="movieId" asp-items="@(new SelectList(Model.Movies, "MovieId", "Title"))">
+        @*<select name="movieId" asp-items="@(new SelectList(Model.Movies, "MovieId", "Title"))">
             <option>Select a movie...</option>
-        </select>
+        </select>*@
 
         <select name="salonId" asp-items="@(new SelectList(Model.Salons, "SalonId", "Name"))">
             <option>Select a salon...</option>

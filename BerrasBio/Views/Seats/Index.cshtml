@@ -5,19 +5,19 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Salong: @Model.First().Salon.Name</h1>
+<h1 class="text-white">Salong: @Model.First().Salon.Name</h1>
 
-<p>
-    Välj upp till tolv platser
+<p class="text-white">
+    Välj upp till tolv platser: <span id="seat-count">0</span>
 </p>
 
-<div>
+<div class="mt-4">
 
     <form asp-action="Choose" class="seats-grid">
         @foreach (var item in Model)
         {
 
-            <div class="seat-num">
+            <div class="seat-num text-white">
                 <p>
                     @item.SeatNumber
                 </p>
@@ -30,15 +30,23 @@
         <input name="viewingId" type="hidden" value="@Model.First().ViewingId" />
 
         <div class="form-group">
-            <input type="submit" value="Fortsätt" class="btn btn-primary" />
+            <input type="submit" value="Fortsätt" class="btn btn-danger mt-3" />
         </div>
     </form>
 
 </div>
 
-<p id="seat-count">
-    0
-</p>
 <form name="ignore_me">
     <input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0" />
 </form>
+
+<style>
+    .container {
+        background-color: transparent;
+    }
+
+    #layoutBackground {
+        background-image: none;
+        background-color: black;
+    }
+</style>
