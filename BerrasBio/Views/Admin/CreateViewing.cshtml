@@ -1,0 +1,47 @@
+﻿@model BerrasBio.ViewModels.CreateViewingViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create viewing for: <br />@Model.Movie.Title</h2>
+
+<div>
+    <form method="post">
+
+        <div class="form-group" hidden>
+            <input asp-for="@Model.MovieId" class="form-control" value="@Model.MovieId" />
+        </div>
+
+        <label class="control-label mt-3">Salon:</label> <br />
+        <select name="salonId" asp-items="@(new SelectList(Model.Salons, "SalonId", "Name"))">
+            <option>Select a salon...</option>
+        </select>
+
+        <div class="form-group mt-3">
+            <label class="control-label">Start Time:</label>
+            <input type="datetime-local" name="startTime" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-outline-dark" />
+        </div>
+
+    </form>
+</div>
+
+<div>
+    <a class="btn btn-dark" asp-action="Details" asp-route-id="@Model.MovieId">Back</a>
+</div>
+
+<style>
+    .container {
+        background-color: transparent;
+    }
+
+    #layoutBackground {
+        background-image: none;
+        background-color: white;
+    }
+</style>
+

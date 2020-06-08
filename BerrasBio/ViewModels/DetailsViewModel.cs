@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace BerrasBio.ViewModels
 {
-    public class CreateViewingViewModel
+    public class DetailsViewModel
     {
-        public int MovieId { get; set; }
         public Movie Movie { get; set; }
-        public List<Salon> Salons { get; set; }
+        public List<Viewing> Viewings { get; set; }
     }
 }

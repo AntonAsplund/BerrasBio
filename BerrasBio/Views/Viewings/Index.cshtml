@@ -5,21 +5,26 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Visningar för <b>@Model.First().Movie.Title</b></h1>
+    <div class="d-flex flex-row align-items-end">
+        <div>
+            <img class="img-fluid" height="150" width="75" src="@Model.First().Movie.PosterURL" alt="@Model.First().Movie.Title poster image" />
+        </div>
+        <h1 class="text-white ml-2">Viewings for <b>@Model.First().Movie.Title</b></h1>
+    </div>
 
-<table class="table">
+<table class="table mt-3">
     <thead>
         <tr>
             <th>
-                <a asp-action="CheckView" asp-route-id="@Model.First().MovieId" asp-route-order="Time">Start tid</a>
+                <a asp-action="CheckView" asp-route-id="@Model.First().MovieId" asp-route-order="Time" class="text-white font-weight-bold">Start tid</a>
 
                 
             </th>
-            <th>
+            <th class="text-white">
                 Salong
             </th>
             <th>
-                <a asp-action="CheckView" asp-route-id="@Model.First().MovieId" asp-route-order="Num">Platser kvar</a>
+                <a asp-action="CheckView" asp-route-id="@Model.First().MovieId" asp-route-order="Num" class="text-white font-weight-bold">Platser kvar</a>
 
                 
             </th>
@@ -28,7 +33,7 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
+        <tr class="text-white">
             <td>
                 @Html.DisplayFor(modelItem => item.FormatedStartTime )
             </td>
@@ -40,10 +45,21 @@
                @item.SeatsLeft
             </td>
             <td>
-               <a asp-action="Book" asp-route-id="@item.ViewingId">Boka biljetter</a>
+               <a asp-action="Book" asp-route-id="@item.ViewingId" class="btn btn-danger">Boka biljetter</a>
             </td>
             
         </tr>
 }
     </tbody>
 </table>
+
+<style>
+    .container {
+        background-color: transparent;
+    }
+
+    #layoutBackground {
+        background-image: none;
+        background-color: black;
+    }
+</style>
