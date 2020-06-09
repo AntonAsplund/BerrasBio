@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BerrasBio.Controllers
 {
@@ -30,7 +31,7 @@ namespace BerrasBio.Controllers
             this.sqlTheaterData = sqlTheaterData;
         }
 
-        // GET: Seats
+        [Authorize]
         public async Task<IActionResult> Index(int? id)
         {
             if (id == null)
