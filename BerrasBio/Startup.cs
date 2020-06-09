@@ -60,15 +60,16 @@ namespace BerrasBio
             {
                 await next();
 
+                string pathWithoutAscii = RemoveNonAscii(ctx);
+
                 if (ctx.Response.StatusCode == 403 && !ctx.Response.HasStarted)
                 {
-                    string originalPath = ctx.Request.Path.Value;
-                    ctx.Response.Redirect($"/error/403?path={originalPath}");
+                    ctx.Response.Redirect($"/error/403?path={pathWithoutAscii}");
                 }
                 else if (ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
                 {
-                    string originalPath = ctx.Request.Path.Value;
-                    ctx.Response.Redirect($"/error/404?path={originalPath}");
+
+                    ctx.Response.Redirect($"/error/404?path={pathWithoutAscii}");
                 }
             });
 
@@ -89,6 +90,12 @@ namespace BerrasBio
             });
 
             
+        }
+
+        private static string RemoveNonAscii(HttpContext ctx)
+        {
+            return Encoding.ASCII.GetString(Encoding.Convert(Encoding.UTF8, Encoding.
+                                    GetEncoding(Encoding.ASCII.EncodingName, new EncoderReplacementFallback(string.Empty), new DecoderExceptionFallback()), Encoding.UTF8.GetBytes(ctx.Request.Path.Value)));
         }
     }
 }
