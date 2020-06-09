@@ -3,15 +3,17 @@
 
 @{
     ViewData["Title"] = "PageNotFound";
+
+    string urlString = "berrasbio.se" + (string)TempData["path"];
 }
 
-    <h1 class="details">Page not found - 404</h1>
+    <h1 class="details extraPaddingT2">Page not found - 404</h1>
 
 <div class="details-description">
 
     <br>
 
-    <h4 class="extraPaddingT5">We're sorry but the page with URL berrasbio.se "@TempData["path"]" cannot be found</h4>
+    <h4>We're sorry but the page with URL @urlString cannot be found</h4>
     <h4 class="extraPaddingB3">If problem persists please feel free to contact us at 1-800-CALL-BERRA.</h4>
     <h4>Might we suggest one of our viewings?</h4>
 </div>
@@ -41,8 +43,8 @@
 </div>
 
 <div class="link-padding">
-    <a class="btn-link" asp-controller="Viewings" asp-action="Index">See our current viewings</a> <strong>|</strong>
-    <a class="btn-link" asp-controller="Home" asp-action="Index">Return to home</a>
+    <a class="btn-link" asp-controller="Viewings" asp-action="Index">See all our current viewings</a> <strong>|</strong>
+    <a class="btn-link" asp-controller="Home" asp-action="Index">Return to main</a>
 </div>
 
 <style>
@@ -98,7 +100,7 @@
     }
 
     .extraPaddingT2 {
-        padding-top: 5em;
+        padding-top: 2em;
     }
 
     .extraPaddingB3 {
