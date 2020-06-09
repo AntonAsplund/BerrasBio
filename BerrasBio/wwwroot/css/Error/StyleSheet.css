@@ -1,0 +1,66 @@
+﻿.text-container {
+    margin-left: 1em;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+div > img {
+    border-radius: 5px;
+    margin-bottom: 0.5em;
+}
+
+.title {
+    color: #F5F5F5;
+    font-weight: bold;
+}
+
+.title:hover {
+    border-bottom: 2px solid #F5F5F5;
+    color: #F5F5F5;
+}
+
+.container {
+    background-color: transparent;
+}
+
+#layoutBackground {
+    background-image: none;
+    background-color: black;
+}
+
+.movies {
+    color: #F5F5F5;
+}
+
+.border-sep {
+    border-bottom: 1px solid #646464;
+}
+
+.border-edge {
+    border: 1px solid #646464;
+}
+
+
+.details {
+    color: #D5D5D5;
+}
+
+.details-description {
+    color: #c2c2c2;
+}
+
+.extraPaddingT2 {
+    padding-top: 2em;
+}
+
+.extraPaddingB3 {
+    padding-bottom: 3em;
+}
+
+.link-padding {
+    padding-bottom: 0.2em;
+    padding-top: 0.2em;
+}
+
+.main-content-container {
+    background-color: black;
+}
