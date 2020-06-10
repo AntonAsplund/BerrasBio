@@ -75,9 +75,8 @@ namespace BerrasBio.Controllers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, "my_email@gmail.com"),
                 new Claim(JwtRegisteredClaimNames.NameId, user.UserId.ToString()),
-                new Claim(JwtRegisteredClaimNames.Gender, isAdmin.ToString()),
+                new Claim(JwtRegisteredClaimNames.Acr, isAdmin.ToString()),
 
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
@@ -132,7 +131,7 @@ namespace BerrasBio.Controllers
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             IList<Claim> claim = identity.Claims.ToList();
-            bool isAdmin = claim[3].Value == "1" ? true : false;
+            bool isAdmin = claim[2].Value == "1" ? true : false;
             return isAdmin;
         }
 

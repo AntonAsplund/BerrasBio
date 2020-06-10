@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BerrasBio.Data;
 using BerrasBio.Models;
+using Microsoft.AspNetCore.Authorization;
+using EO.Internal;
 
 namespace BerrasBio.Controllers
 {
@@ -15,10 +17,12 @@ namespace BerrasBio.Controllers
     public class ViewingsApiController : ControllerBase
     {
         private readonly TeaterDbContext _context;
+        private readonly ISqlTheaterData sqlTheaterData;
 
-        public ViewingsApiController(TeaterDbContext context)
+        public ViewingsApiController(TeaterDbContext context, ISqlTheaterData sqlTheaterData)
         {
             _context = context;
+            this.sqlTheaterData = sqlTheaterData;
         }
 
         // GET: api/ViewingsApi
@@ -42,10 +46,28 @@ namespace BerrasBio.Controllers
             return viewing;
         }
 
+        public async Task<ActionResult<List<Viewing>>> Index(int? id, string order)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            List<Viewing> viewings = await sqlTheaterData.GetViewingsById((int)id, order);
+
+            if (viewings.Count == 0)
+            {
+                return NotFound();
+            }
+            return viewings;
+        }
+
+
         // PUT: api/ViewingsApi/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> PutViewing(int id, Viewing viewing)
         {
             if (id != viewing.ViewingId)
@@ -78,6 +100,8 @@ namespace BerrasBio.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
+        [Authorize]
+
         public async Task<ActionResult<Viewing>> PostViewing(Viewing viewing)
         {
             _context.Viewings.Add(viewing);
@@ -88,6 +112,7 @@ namespace BerrasBio.Controllers
 
         // DELETE: api/ViewingsApi/5
         [HttpDelete("{id}")]
+        [Authorize ]
         public async Task<ActionResult<Viewing>> DeleteViewing(int id)
         {
             var viewing = await _context.Viewings.FindAsync(id);
