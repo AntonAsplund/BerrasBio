@@ -44,7 +44,7 @@ namespace BerrasBio.Controllers
             return response;
         }
 
-        public User GetUser(string username)
+        private User GetUser(string username)
         {
             IQueryable<User> queryForUsername = context.Users
                 .Where(credential => credential.UserName == username);
@@ -75,7 +75,6 @@ namespace BerrasBio.Controllers
             var claims = new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
-                new Claim(JwtRegisteredClaimNames.Email, "my_email@gmail.com"),
                 new Claim(JwtRegisteredClaimNames.NameId, user.UserId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Gender, isAdmin.ToString()),
 
@@ -96,7 +95,7 @@ namespace BerrasBio.Controllers
             User credentials = GetUser(userLoging.UserName);
 
             User user = null;
-            if (userLoging.UserName == credentials.UserName || Encryption.DecryptString("kljsdkkdlo4454GG00155sajuklmbkdl", userLoging.Password) == credentials.Password)
+            if (userLoging.UserName == credentials.UserName && Encryption.DecryptString("kljsdkkdlo4454GG00155sajuklmbkdl", userLoging.Password) == credentials.Password)
             {
                 user = new User()
                 {
