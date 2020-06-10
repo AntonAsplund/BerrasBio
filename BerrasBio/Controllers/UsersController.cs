@@ -90,7 +90,7 @@ namespace BerrasBio.Controllers
             User credentials = GetUser(userLoging.UserName);
 
             User user = null;
-            if (userLoging.UserName == credentials.UserName || Encryption.DecryptString("kljsdkkdlo4454GG00155sajuklmbkdl", userLoging.Password) == credentials.Password)
+            if (userLoging.UserName == credentials.UserName && Encryption.DecryptString("kljsdkkdlo4454GG00155sajuklmbkdl", credentials.Password) == userLoging.Password)
             {
                 user = new User()
                 {
@@ -219,25 +219,26 @@ namespace BerrasBio.Controllers
         public async Task<IActionResult> Login([Bind("UserId,UserName,Password,IsAdmin,PhoneNumber")] User user)
         {
             User loggedInUser = _context.Users.Where(u => u.UserName == user.UserName).FirstOrDefault();
-            if (loggedInUser.UserId == 0)
+            if (loggedInUser == null)
             {
                 return Redirect(String.Format($"../../Users/Login"));
             }
 
-            IActionResult response = Unauthorized();
-            User atuenticatedUser = await AuthenticateUserAsync(user);
-            if (loggedInUser != null)
+            //IActionResult response = Unauthorized();
+            User authenticatedUser = await AuthenticateUserAsync(user);
+            if (authenticatedUser != null)
             {
 
-                var claims = new[] { new Claim(ClaimTypes.Name, loggedInUser.UserName),
-                    new Claim(ClaimTypes.Role, loggedInUser.IsAdmin ? "Admin" : "User")};
+                var claims = new[] { new Claim(ClaimTypes.Name, authenticatedUser.UserName),
+                    new Claim(ClaimTypes.Role, authenticatedUser.IsAdmin ? "Admin" : "User")};
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
                 return Redirect(String.Format($"../../Users/Accepted"));
 
             }
-            return response;
+            //return response;
+            return Redirect(String.Format($"../../Users/Login"));
         }
 
         public IActionResult Accepted()

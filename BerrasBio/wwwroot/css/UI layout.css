@@ -3,6 +3,17 @@
     width: 3em;
 }
 
+#avatarIcon {
+    height: 2em;
+    width: 2em;
+}
+
+.avatar-icon-container {
+    padding: 0.3em;
+    border: 1px solid black;
+    border-radius: 100%;
+}
+
 #layoutBackground {
     background-color: none !important;
     background-image: url('../Assets/Images/backgroundImage.jpg');
@@ -24,4 +35,30 @@
 
 .extraPaddingB5 {
     padding-bottom: 5em;
+}
+
+.nav-my-profile-button-container, .nav-login-form {
+    position: absolute;
+    top: 3em;
+    display: none;
+}
+
+.login-navbar:hover > .nav-login-form, .login-navbar:hover > .nav-my-profile-button-container {
+    display: inline-block;
+}
+
+.navbar-decoration {
+    padding: 0.5em;
+    border-radius: 5px;
+}
+
+.login-navbar {
+    margin-top: 1em;
+    border: white 1px solid;
+    padding-bottom: 1em;
+    padding-right: 1.5em;
+}
+
+#Password:active > .nav-login-form, #Password:focus > .nav-login-form, #UserName:active > .nav-my-profile-button-container, #UserName:focus > .nav-my-profile-button-container {
+    display: inline-block;
 }

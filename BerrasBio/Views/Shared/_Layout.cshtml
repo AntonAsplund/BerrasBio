@@ -20,6 +20,26 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1 ml-auto">
+
+                        <li class="nav-item login-navbar " >
+                            <!--<a class="nav-link text-white nav-Login-Button" asp-controller="Users" asp-action="Login">Login</a>-->
+                             
+                            <img src="~/Assets/Images/userAvatar.png" class="nav-Login-Button avatar-icon-container" id="avatarIcon"/>
+
+                            @if (!User.Identity.IsAuthenticated)
+                            {
+                                @await Html.PartialAsync("DropDownLogin")
+                            }
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <div class="bg-danger nav-my-profile-button-container navbar-decoration">
+                                    <a class="btn btn-primary dropdown-item" asp-controller="Users" asp-action="Login">My Profile</a>
+                                    <a class="nav-link text-white  dropdown-item" asp-controller="Users" asp-action="Login">Log out</a>
+                                </div>
+                            }
+                        </li>
+                    </ul>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
@@ -35,6 +55,7 @@
                             </li>
                         }
                     </ul>
+
                 </div>
             </div>
         </nav>
