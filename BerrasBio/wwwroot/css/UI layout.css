@@ -12,6 +12,7 @@
     padding: 0.3em;
     border: 1px solid black;
     border-radius: 100%;
+    margin-left: auto;
 }
 
 #layoutBackground {
@@ -61,3 +62,15 @@
 #Password:active > .nav-login-form, #Password:focus > .nav-login-form, #UserName:active > .nav-my-profile-button-container, #UserName:focus > .nav-my-profile-button-container {
     display: inline-block;
 }*/
+
+@media (min-width: 576px) {
+    .navbar-decoration {
+        position: relative;
+        left: auto;
+        right: 0vw;
+    }
+
+    .login-navbar {
+        margin-left: auto;
+    }
+}

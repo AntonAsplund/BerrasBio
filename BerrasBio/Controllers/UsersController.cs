@@ -67,6 +67,18 @@ namespace BerrasBio.Controllers
             return View(user);
         }
 
+        //Method to acess your own profile page from the navbar button "my profile"
+        public async Task<IActionResult> MyDetails()
+        {
+            var context = this;
+            var identity = context.HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == (claim[0].Value));
+
+            return RedirectToAction("Details", new { id = user.UserId });
+        }
+
         //[HttpGet]
         //public async Task<IActionResult> LoginAsync(string username, string password)
         //{
