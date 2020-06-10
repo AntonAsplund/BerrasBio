@@ -1,27 +1,23 @@
 ﻿@model BerrasBio.Models.User
 
 @{
-    
+
 }
 
-<li class="nav-item login-navbar">
-    <a class="nav-link text-white nav-Login-Button" asp-controller="Users" asp-action="Login">Login</a>
+<div class="nav-login-form bg-danger navbar-decoration dropdown-menu">
+    <form asp-controller="Users" asp-action="Login" method="post">
+        <div class="form-group">
+            <label for="UserName" class="control-label">Username:</label>
+            <input asp-for="UserName" type="text" id="UserName" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label for="Password" class="control-label">Password:</label>
+            <input asp-for="Password" type="password" id="Password" class="form-control" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Logga in" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
 
 
-
-    <div class="nav-login-form bg-danger navbar-decoration">
-        <form asp-controller="Users" asp-action="Login" method="post">
-            <div class="form-group">
-                <label for="UserName" class="control-label">Username:</label>
-                <input asp-for="UserName" type="text" id="User.UserName" class="form-control" />
-            </div>
-            <div class="form-group">
-                <label for="Password" class="control-label">Password:</label>
-                <input asp-for="Password" type="password" id="User.Password" class="form-control" />
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Logga in" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</li>
