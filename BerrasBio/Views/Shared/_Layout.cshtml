@@ -20,12 +20,12 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <ul class="navbar-nav flex-grow-1 ml-auto">
+                    <ul class="navbar-nav flex-grow-1 ml-auto dropdown">
 
                         <li class="nav-item login-navbar " >
                             <!--<a class="nav-link text-white nav-Login-Button" asp-controller="Users" asp-action="Login">Login</a>-->
                              
-                            <img src="~/Assets/Images/userAvatar.png" class="nav-Login-Button avatar-icon-container" id="avatarIcon"/>
+                            <img src="~/Assets/Images/userAvatar.png" class="nav-Login-Button avatar-icon-container dropdown-toggle" data-toggle="dropdown" id="avatarIcon"/>
 
                             @if (!User.Identity.IsAuthenticated)
                             {
@@ -33,9 +33,9 @@
                             }
                             @if (User.Identity.IsAuthenticated)
                             {
-                                <div class="bg-danger nav-my-profile-button-container navbar-decoration">
-                                    <a class="btn btn-primary dropdown-item" asp-controller="Users" asp-action="Login">My Profile</a>
-                                    <a class="nav-link text-white  dropdown-item" asp-controller="Users" asp-action="Login">Log out</a>
+                                <div class="dropdown-menu bg-danger nav-my-profile-button-container navbar-decoration">
+                                    <a class="dropdown-item btn btn-primary dropdown-item" asp-controller="Users" asp-action="Login">My Profile</a>
+                                    <a class="dropdown-item nav-link text-white  dropdown-item" asp-controller="Users" asp-action="Login">Log out</a>
                                 </div>
                             }
                         </li>
@@ -44,7 +44,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
+                        <li class="nav-item" id="movies">
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Movies">Movies</a>
                         </li>
 

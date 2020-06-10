@@ -44,7 +44,7 @@ namespace BerrasBio.Controllers
             return response;
         }
 
-        public User GetUser(string username)
+        private User GetUser(string username)
         {
             IQueryable<User> queryForUsername = context.Users
                 .Where(credential => credential.UserName == username);
@@ -55,10 +55,6 @@ namespace BerrasBio.Controllers
             }
 
             return credentials;
-
-            //return context.UserCredential
-            //    .Where(credential => credential.UserName == "Daniel");
-
         }
 
         private string GenerateWebToken(User user)
@@ -95,7 +91,7 @@ namespace BerrasBio.Controllers
             User credentials = GetUser(userLoging.UserName);
 
             User user = null;
-            if (userLoging.UserName == credentials.UserName || Encryption.DecryptString("kljsdkkdlo4454GG00155sajuklmbkdl", userLoging.Password) == credentials.Password)
+            if (userLoging.UserName == credentials.UserName && Encryption.DecryptString("kljsdkkdlo4454GG00155sajuklmbkdl", credentials.Password) == userLoging.Password)
             {
                 user = new User()
                 {
@@ -108,16 +104,16 @@ namespace BerrasBio.Controllers
             return user;
         }
         [HttpPost("CreateUser")]
-        [Authorize]
         public async Task<IActionResult> CreateUserAsync([FromBody] User user)
         {
-            if (!IsAdmin())
-            {
-                return Unauthorized("Only administrators is allowed to create users.");
-            }
             IActionResult response = Unauthorized();
             if (user != null)
             {
+                if (!IsAdmin())
+                {
+                    user.IsAdmin = false;
+                    //return Unauthorized("Only administrators is allowed to create users.");
+                }
                 user.Password = Encryption.EncryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
                 //user.Password = Encryption.EncryptString(configuration["Jwt:Key"], user.Password);
                 Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<User> entityEntry = context.Users.Add(user);
