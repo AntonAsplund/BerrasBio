@@ -233,6 +233,7 @@ namespace BerrasBio.Controllers
             User loggedInUser = _context.Users.Where(u => u.UserName == user.UserName).FirstOrDefault();
             if (loggedInUser == null)
             {
+                TempData["WrongInput"] = "Faulty towers input";
                 return Redirect(String.Format($"../../Users/Login"));
             }
 
@@ -249,7 +250,7 @@ namespace BerrasBio.Controllers
                 return Redirect(String.Format($"../../Users/Accepted"));
 
             }
-            //return response;
+            TempData["WrongInput"] = "Faulty towers input";
             return Redirect(String.Format($"../../Users/Login"));
         }
 
