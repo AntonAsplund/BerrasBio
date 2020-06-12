@@ -52,6 +52,21 @@ namespace BerrasBio.Controllers
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var context = this;
+            var identity = context.HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
+
+            var thisUser = await _context.Users.FirstOrDefaultAsync(u => u.UserName == (claim[0].Value));
+
+            if (AuthHandler.CheckIfAdmin(this))
+            {
+                TempData["IsAdmin"] = true;
+            }
+            else if (thisUser.UserId != id) 
+            {
+                return StatusCode(403);
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -70,6 +85,11 @@ namespace BerrasBio.Controllers
         //Method to acess your own profile page from the navbar button "my profile"
         public async Task<IActionResult> MyDetails()
         {
+            if (AuthHandler.CheckIfAdmin(this))
+            {
+                TempData["IsAdmin"] = true;
+            }
+
             var context = this;
             var identity = context.HttpContext.User.Identity as ClaimsIdentity;
             IList<Claim> claim = identity.Claims.ToList();
@@ -240,6 +260,7 @@ namespace BerrasBio.Controllers
             User loggedInUser = _context.Users.Where(u => u.UserName == user.UserName).FirstOrDefault();
             if (loggedInUser == null)
             {
+                TempData["WrongInput"] = "Faulty towers input";
                 return Redirect(String.Format($"../../Users/Login"));
             }
 
@@ -256,7 +277,7 @@ namespace BerrasBio.Controllers
                 return Redirect(String.Format($"../../Users/Accepted"));
 
             }
-            //return response;
+            TempData["WrongInput"] = "Faulty towers input";
             return Redirect(String.Format($"../../Users/Login"));
         }
 
@@ -268,6 +289,22 @@ namespace BerrasBio.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+
+            var context = this;
+            var identity = context.HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
+
+            var thisUser = await _context.Users.FirstOrDefaultAsync(u => u.UserName == (claim[0].Value));
+
+            if (AuthHandler.CheckIfAdmin(this))
+            {
+                TempData["IsAdmin"] = true;
+            }
+            else if (thisUser.UserId != id)
+            {
+                return StatusCode(403);
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -277,7 +314,11 @@ namespace BerrasBio.Controllers
             {
                 return NotFound();
             }
+
+               
+            user.Password = Encryption.DecryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
             return View(user);
+
         }
 
         // POST: Users/Edit/5
@@ -285,8 +326,24 @@ namespace BerrasBio.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,UserName,Password,IsAdmin,PhoneNumber")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,UserName,FirstName,LastName,Password,IsAdmin,PhoneNumber")] User user)
         {
+
+            var context = this;
+            var identity = context.HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
+
+            var thisUser = await _context.Users.FirstOrDefaultAsync(u => u.UserName == (claim[0].Value));
+
+            if (AuthHandler.CheckIfAdmin(this))
+            {
+                TempData["IsAdmin"] = true;
+            }
+            else if (thisUser.UserId != id)
+            {
+                return StatusCode(403);
+            }
+
             if (id != user.UserId)
             {
                 return NotFound();
@@ -296,6 +353,7 @@ namespace BerrasBio.Controllers
             {
                 try
                 {
+                    user.Password = Encryption.EncryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
@@ -310,7 +368,14 @@ namespace BerrasBio.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                if (AuthHandler.CheckIfAdmin(this))
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    return RedirectToAction("Details", new { id = user.UserId });
+                }
             }
             return View(user);
         }

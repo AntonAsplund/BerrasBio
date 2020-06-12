@@ -29,7 +29,7 @@
 
                             @if (!User.Identity.IsAuthenticated)
                             {
-                                @await Html.PartialAsync("DropDownLogin")
+                                @await Html.PartialAsync("DropDownLogin", new User())
                             }
                             @if (User.Identity.IsAuthenticated)
                             {
