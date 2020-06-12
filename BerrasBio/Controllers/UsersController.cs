@@ -151,7 +151,7 @@ namespace BerrasBio.Controllers
             }
         }
 
-        public User GetUser(string username)
+        private User GetUser(string username)
         {
             IQueryable<User> queryForUsername = _context.Users
                 .Where(credential => credential.UserName == username);
@@ -240,6 +240,13 @@ namespace BerrasBio.Controllers
         public IActionResult Login()
         {
             return View();
+        }
+        
+        public IActionResult LogOut()
+        {
+            HttpContext.SignOutAsync();
+            return Redirect(String.Format($"../../Home"));
+
         }
 
 

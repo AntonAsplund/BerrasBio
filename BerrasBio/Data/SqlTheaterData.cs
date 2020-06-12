@@ -231,6 +231,8 @@ namespace BerrasBio.Data
 
         public bool CreateViewing(Viewing viewing)
         {
+            _context.Entry(viewing).Reference(v => v.Movie).Load();
+            viewing.Movie.IsPlaying = true;
             _context.Viewings.Add(viewing);
             _context.SaveChanges();
             return true;
