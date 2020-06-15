@@ -12,6 +12,7 @@ using Microsoft.Extensions.Primitives;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace BerrasBio.Controllers
 {
@@ -31,7 +32,7 @@ namespace BerrasBio.Controllers
             this.sqlTheaterData = sqlTheaterData;
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Index(int? id)
         {
             if (id == null)

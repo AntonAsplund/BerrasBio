@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using BerrasBio.Data;
 using BerrasBio.Models;
 using BerrasBio.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace BerrasBio.Controllers
 {
@@ -104,6 +105,7 @@ namespace BerrasBio.Controllers
             return user;
         }
         [HttpPost("CreateUser")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateUserAsync([FromBody] User user)
         {
             IActionResult response = Unauthorized();

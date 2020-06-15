@@ -9,6 +9,7 @@ using BerrasBio.Data;
 using BerrasBio.Models;
 using Microsoft.AspNetCore.Authorization;
 using BerrasBio.Security;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace BerrasBio.Controllers
 {
@@ -22,7 +23,7 @@ namespace BerrasBio.Controllers
         }
 
         // GET: Orders
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Index(int? Id)
         {
             if (Id == null)
