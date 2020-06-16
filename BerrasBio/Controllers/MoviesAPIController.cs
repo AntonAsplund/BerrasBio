@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BerrasBio.Data;
 using BerrasBio.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
 
 namespace BerrasBio.Controllers
 {
@@ -14,24 +17,24 @@ namespace BerrasBio.Controllers
     [ApiController]
     public class MoviesAPIController : ControllerBase
     {
-        private readonly TeaterDbContext _context;
+        private readonly ISqlTheaterData db;
 
-        public MoviesAPIController(TeaterDbContext context)
+        public MoviesAPIController(ISqlTheaterData sqlTheaterData)
         {
-            _context = context;
+            db = sqlTheaterData;
         }
         // GET: api/MoviesAPI
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()
         {
-            return await _context.Movies.ToListAsync();
+            return await db.OnGetMovies(true);
         }
 
         // GET: api/MoviesAPI/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Movie>> GetMovie(int id)
         {
-            var movie = await _context.Movies.FindAsync(id);
+            var movie = await db.OnGetMovie(id);
 
             if (movie == null)
             {
@@ -39,6 +42,34 @@ namespace BerrasBio.Controllers
             }
 
             return movie;
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> DeleteMovie(int id)
+        {
+            IActionResult response = Unauthorized();
+
+            if (IsAdmin())
+            {
+                bool deleted = await db.OnDeleteMovie(id);
+
+                if (deleted == false)
+                    return NotFound();
+
+                else
+                    return Ok();
+            }
+
+            return response;
+        }
+
+        private bool IsAdmin()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
+            bool isAdmin = claim[2].Value == "1" ? true : false;
+            return isAdmin;
         }
     }
 }
