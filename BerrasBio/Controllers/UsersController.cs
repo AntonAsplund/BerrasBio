@@ -99,24 +99,6 @@ namespace BerrasBio.Controllers
             return RedirectToAction("Details", new { id = user.UserId });
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> LoginAsync(string username, string password)
-        //{
-        //    User userLoging = new User();
-        //    userLoging.UserName = username;
-        //    userLoging.Password = password;
-        //    IActionResult response = Unauthorized();
-        //    User user = await AuthenticateUserAsync(userLoging);
-        //    if (user != null)
-        //    {
-        //        string tokenStr = GenerateWebToken(user);
-        //        return Ok(new { token = tokenStr });
-        //    }
-        //    return response;
-        //}
-
-
-
         private async Task<User> AuthenticateUserAsync(User userLoging)
         {
             User credentials = GetUser(userLoging.UserName);
@@ -160,12 +142,7 @@ namespace BerrasBio.Controllers
             {
                 credentials = item;
             }
-
             return credentials;
-
-            //return context.UserCredential
-            //    .Where(credential => credential.UserName == "Daniel");
-
         }
 
         // GET: Users/Create
@@ -177,7 +154,6 @@ namespace BerrasBio.Controllers
             }
             return View();
         }
-
 
         // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -191,7 +167,6 @@ namespace BerrasBio.Controllers
             {
                 user.IsAdmin = false;
                 user.Password = Encryption.EncryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
-                //user.Password = Encryption.EncryptString(configuration["Jwt:Key"], user.Password);
                 Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<User> entityEntry = sqlTheaterData.AddUser(user);
                 await _context.SaveChangesAsync();
 
@@ -210,7 +185,6 @@ namespace BerrasBio.Controllers
             return AuthHandler.RedirectToView(this);
         }
 
-
         // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -223,7 +197,6 @@ namespace BerrasBio.Controllers
             if (TryValidateModel(user) && !hasDublicates)
             {
                 user.Password = Encryption.EncryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
-                //user.Password = Encryption.EncryptString(configuration["Jwt:Key"], user.Password);
                 Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<User> entityEntry = sqlTheaterData.AddUser(user);
                 await _context.SaveChangesAsync();
 
@@ -235,8 +208,6 @@ namespace BerrasBio.Controllers
                 return BadRequest(ModelState);
             }
         }
-
-
         public IActionResult Login()
         {
             return View();
@@ -248,8 +219,6 @@ namespace BerrasBio.Controllers
             return Redirect(String.Format($"../../Home"));
 
         }
-
-
         // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -264,7 +233,6 @@ namespace BerrasBio.Controllers
                 return Redirect(String.Format($"../../Users/Login"));
             }
 
-            //IActionResult response = Unauthorized();
             User authenticatedUser = await AuthenticateUserAsync(user);
             if (authenticatedUser != null)
             {

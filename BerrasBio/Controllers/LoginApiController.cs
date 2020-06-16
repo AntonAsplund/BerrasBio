@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Authorization;
 using BerrasBio.Data;
 using BerrasBio.Models;
 using BerrasBio.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace BerrasBio.Controllers
 {
@@ -21,7 +22,6 @@ namespace BerrasBio.Controllers
     public class LoginApiController : ControllerBase
     {
         private IConfiguration configuration;
-
         public TeaterDbContext context { get; set; }
         public LoginApiController(IConfiguration configuration, TeaterDbContext context)
         {
@@ -43,7 +43,6 @@ namespace BerrasBio.Controllers
             }
             return response;
         }
-
         private User GetUser(string username)
         {
             IQueryable<User> queryForUsername = context.Users
@@ -53,16 +52,12 @@ namespace BerrasBio.Controllers
             {
                 credentials = item;
             }
-
             return credentials;
         }
-
         private string GenerateWebToken(User user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
             SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256Signature);
-
-
             int isAdmin = 0;
             if (user.IsAdmin)
             {
@@ -73,7 +68,6 @@ namespace BerrasBio.Controllers
                 new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
                 new Claim(JwtRegisteredClaimNames.NameId, user.UserId.ToString()),
                 new Claim(JwtRegisteredClaimNames.Acr, isAdmin.ToString()),
-
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
             JwtSecurityToken token = new JwtSecurityToken(
@@ -102,8 +96,10 @@ namespace BerrasBio.Controllers
                 };
             }
             return user;
+
         }
         [HttpPost("CreateUser")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateUserAsync([FromBody] User user)
         {
             IActionResult response = Unauthorized();
@@ -112,17 +108,14 @@ namespace BerrasBio.Controllers
                 if (!IsAdmin())
                 {
                     user.IsAdmin = false;
-                    //return Unauthorized("Only administrators is allowed to create users.");
                 }
                 user.Password = Encryption.EncryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
-                //user.Password = Encryption.EncryptString(configuration["Jwt:Key"], user.Password);
                 Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<User> entityEntry = context.Users.Add(user);
                 await context.SaveChangesAsync();
                 return Ok("Success!");
             }
             return response;
         }
-
         private bool IsAdmin()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -130,32 +123,5 @@ namespace BerrasBio.Controllers
             bool isAdmin = claim[2].Value == "1" ? true : false;
             return isAdmin;
         }
-
-
-
-        [Authorize]
-        [HttpPost("Post")]
-        public string Post()
-        {
-            var email = User.FindFirst("Daniel")?.Value;
-
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            IList<Claim> claim = identity.Claims.ToList();
-            string userName = claim[2].Value;
-            return "Welcom To: " + userName;
-        }
-        [Authorize]
-
-        [HttpGet("GetValue")]
-        public ActionResult<IEnumerable<string>> Get()
-        {
-            return new String[]
-            {
-                "Value1",
-                "Value2",
-                "Value3"
-            };
-        }
-
     }
 }

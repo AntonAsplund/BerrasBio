@@ -26,7 +26,6 @@ namespace BerrasBio
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by thehehej runtime. Use this method to add services to the container.
@@ -54,7 +53,6 @@ namespace BerrasBio
                 .AddCookie(o => o.LoginPath = new PathString("/Users/Login"));
             services.AddControllersWithViews();
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -93,7 +91,6 @@ namespace BerrasBio
 
             app.UseAuthentication();
             app.UseAuthorization();
-//BerrasBioApi.BerrasBioApi
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

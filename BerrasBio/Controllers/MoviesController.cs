@@ -25,10 +25,8 @@ namespace BerrasBio.Controllers
         // GET: Movies
         public async Task<IActionResult> Index()
         {
-            
                 List<Movie> movies = await sqlTheaterData.OnGetMovies(includeOld: false);
                 return base.View(movies);
-            
         }
 
         // GET: Movies/Details/5
@@ -38,14 +36,12 @@ namespace BerrasBio.Controllers
             {
                 return NotFound();
             }
-
             var movie = await sqlTheaterData.OnGetMovie(id);
             var viewings = await sqlTheaterData.GetViewingsById((int)id, "Num");
             if (movie == null)
             {
                 return NotFound();
             }
-
             var model = new DetailsViewModel { Movie = movie, Viewings = viewings };
             return View(model);
         }
@@ -53,34 +49,6 @@ namespace BerrasBio.Controllers
         public IActionResult CheckView(int? id, string order)
         {
             return Redirect(String.Format($"../../Viewings/index?id={id}&order={order}"));
-            //return Redirect(String.Format($"../../Viewings/index/{id}/{order}"));
-        }
-
-       
-
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await sqlTheaterData.FindMovie(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-
-            return View(order);
-        }
-
-        // POST: Movies/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            await sqlTheaterData.DeleteMovieAt(id);
-            return RedirectToAction(nameof(Index));
         }
     }
 }

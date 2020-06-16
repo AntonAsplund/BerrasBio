@@ -6,7 +6,7 @@ let numTickets = 0;
 const callback = event => {
     let seatCounter = document.getElementById("seat-count");
     var dirty_bit = document.getElementById('page_is_dirty');
-    if (dirty_bit.value == '1') window.location.reload();
+    if (dirty_bit != null && dirty_bit.value == '1') window.location.reload();
     function mark_page_dirty() {
         dirty_bit.value = '1';
     }

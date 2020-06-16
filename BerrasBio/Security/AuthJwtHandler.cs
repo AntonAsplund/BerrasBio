@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace BerrasBio.Security
 {
-    public class AuthJwtHandler
+    public static class AuthJwtHandler
     {
 
-        private bool IsCorrectUser(int customerId, Controller context)
+        private static bool IsCorrectUser(int customerId, Controller context)
         {
             var identity = context.HttpContext.User.Identity as ClaimsIdentity;
             IList<Claim> claim = identity.Claims.ToList();
