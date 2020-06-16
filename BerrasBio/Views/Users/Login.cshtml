@@ -11,7 +11,11 @@
     <div class="col-md-4">
         @if (TempData["WrongInput"] != null)
         {
-            <span class="text-danger"><strong>Wrong username and/or password</strong></span>
+            <span class="text-danger"><strong>Fel lösenord/användarnamn</strong></span>
+        }
+        @if (TempData["UserCreated"] != null)
+        {
+            <span class="text-success"><strong>Användare skapad, vänligen logga in</strong></span>
         }
         <form asp-action="Login">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>

@@ -20,7 +20,6 @@ namespace BerrasBio.Controllers
         {
             _context = context;
         }
-
         // GET: api/MoviesAPI
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Movie>>> GetMovies()

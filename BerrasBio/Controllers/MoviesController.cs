@@ -45,10 +45,5 @@ namespace BerrasBio.Controllers
             var model = new DetailsViewModel { Movie = movie, Viewings = viewings };
             return View(model);
         }
-
-        public IActionResult CheckView(int? id, string order)
-        {
-            return Redirect(String.Format($"../../Viewings/index?id={id}&order={order}"));
-        }
     }
 }
