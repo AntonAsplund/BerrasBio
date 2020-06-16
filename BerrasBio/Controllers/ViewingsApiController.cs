@@ -109,22 +109,6 @@ namespace BerrasBio.Controllers
             return CreatedAtAction("GetViewing", new { id = viewing.ViewingId }, viewing);
         }
 
-        // DELETE: api/ViewingsApi/5
-        [HttpDelete("{id}")]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<ActionResult<Viewing>> DeleteViewing(int id)
-        {
-            var viewing = await _context.Viewings.FindAsync(id);
-            if (viewing == null)
-            {
-                return NotFound();
-            }
-
-            _context.Viewings.Remove(viewing);
-            await _context.SaveChangesAsync();
-
-            return viewing;
-        }
 
         private bool ViewingExists(int id)
         {
