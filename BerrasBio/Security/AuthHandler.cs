@@ -38,7 +38,7 @@ namespace BerrasBio.Security
 
         }
 
-        internal static bool CheckIfCorrectUser(string userName, OrdersController context)
+        internal static bool CheckIfCorrectUser(string userName, Controller context)
         {
             var identity = context.HttpContext.User.Identity as ClaimsIdentity;
             IList<Claim> claim = identity.Claims.ToList();
