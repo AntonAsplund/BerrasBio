@@ -9,6 +9,7 @@ using BerrasBio.Data;
 using BerrasBio.Models;
 using Microsoft.AspNetCore.Authorization;
 using EO.Internal;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace BerrasBio.Controllers
 {
@@ -66,7 +67,7 @@ namespace BerrasBio.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> PutViewing(int id, Viewing viewing)
         {
             if (id != viewing.ViewingId)
@@ -99,8 +100,7 @@ namespace BerrasBio.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
-        [Authorize]
-
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<Viewing>> PostViewing(Viewing viewing)
         {
             _context.Viewings.Add(viewing);
@@ -111,7 +111,7 @@ namespace BerrasBio.Controllers
 
         // DELETE: api/ViewingsApi/5
         [HttpDelete("{id}")]
-        [Authorize ]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<Viewing>> DeleteViewing(int id)
         {
             var viewing = await _context.Viewings.FindAsync(id);
