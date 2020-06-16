@@ -9,6 +9,7 @@ using BerrasBio.Data;
 using BerrasBio.Models;
 using Microsoft.AspNetCore.Authorization;
 using BerrasBio.Security;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace BerrasBio.Controllers
 {
@@ -47,7 +48,7 @@ namespace BerrasBio.Controllers
         }
 
         // GET: Tickets/Create
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult Create()
         {
             return AuthHandler.RedirectToView(this);
@@ -57,7 +58,7 @@ namespace BerrasBio.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("TicketId,Date,SeatId,ViewingId")] Ticket ticket)
         {

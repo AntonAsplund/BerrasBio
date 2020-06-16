@@ -35,7 +35,7 @@ namespace BerrasBio.Controllers
         }
 
         // GET: Users
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Index()
         {
             if (AuthHandler.CheckIfAdmin(this))
@@ -179,7 +179,7 @@ namespace BerrasBio.Controllers
             }
         }
         // GET: Users/Create
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult CreateAdmin()
         {
             return AuthHandler.RedirectToView(this);
@@ -190,7 +190,7 @@ namespace BerrasBio.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateAdmin([Bind("UserId,UserName,FirstName,LastName,Password,IsAdmin,PhoneNumber")] User user)
         {
             bool hasDublicates = _context.Users.Where(u => u.UserName == user.UserName).Any();
@@ -303,6 +303,10 @@ namespace BerrasBio.Controllers
 
             var thisUser = await _context.Users.FirstOrDefaultAsync(u => u.UserName == (claim[0].Value));
 
+            var duplicateUserName = await _context.Users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
+
+            
+
             if (AuthHandler.CheckIfAdmin(this))
             {
                 TempData["IsAdmin"] = true;
@@ -310,6 +314,12 @@ namespace BerrasBio.Controllers
             else if (thisUser.UserId != id)
             {
                 return StatusCode(403);
+            }
+
+            if (duplicateUserName != null && duplicateUserName.UserId != user.UserId)
+            {
+                TempData["UserNameTaken"] = "Username taken";
+                return View(user);
             }
 
             if (id != user.UserId)
@@ -322,8 +332,27 @@ namespace BerrasBio.Controllers
                 try
                 {
                     user.Password = Encryption.EncryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
-                    _context.Update(user);
+
+                    var oldUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == user.UserId);
+
+                    oldUser.FirstName = user.FirstName;
+                    oldUser.LastName = user.LastName;
+                    oldUser.Password = user.Password;
+                    oldUser.PhoneNumber = user.PhoneNumber;
+                    oldUser.IsAdmin = user.IsAdmin;
+                    oldUser.UserName = user.UserName;
+
                     await _context.SaveChangesAsync();
+
+
+                    if (thisUser.UserId == user.UserId) 
+                    { 
+                        var claims = new[] { new Claim(ClaimTypes.Name, user.UserName),
+                        new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User")};
+
+                        var identityClaims = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identityClaims));
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
