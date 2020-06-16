@@ -4,7 +4,8 @@
     ViewData["Title"] = "Details";
 }
 
-<h1 class="details-description">Profile @if (TempData["IsAdmin"] != null) { <strong>-  Admin</strong> }</h1>
+    <h1 class="details-description">Profile of @Html.DisplayFor(model => model.UserName) @if (TempData["IsAdmin"] != null)
+    {<strong>-  Admin View</strong>}</h1>
 <hr class="details-description">
 <div class="details-description">
     <hr />

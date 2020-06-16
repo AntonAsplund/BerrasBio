@@ -25,7 +25,7 @@
 }
 
 .gray-box {
-    background-color: darkgray;
+    background-color: black;
     border-radius: 5px;
     margin-bottom: 10em;
 }
@@ -73,4 +73,12 @@
     .login-navbar {
         margin-left: auto;
     }
+}
+
+.details-description {
+    color: #c2c2c2;
+}
+
+.white-text {
+    color: #c2c2c2;
 }

@@ -99,23 +99,6 @@ namespace BerrasBio.Controllers
             return RedirectToAction("Details", new { id = user.UserId });
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> LoginAsync(string username, string password)
-        //{
-        //    User userLoging = new User();
-        //    userLoging.UserName = username;
-        //    userLoging.Password = password;
-        //    IActionResult response = Unauthorized();
-        //    User user = await AuthenticateUserAsync(userLoging);
-        //    if (user != null)
-        //    {
-        //        string tokenStr = GenerateWebToken(user);
-        //        return Ok(new { token = tokenStr });
-        //    }
-        //    return response;
-        //}
-
-
 
         private async Task<User> AuthenticateUserAsync(User userLoging)
         {
@@ -264,7 +247,6 @@ namespace BerrasBio.Controllers
                 return Redirect(String.Format($"../../Users/Login"));
             }
 
-            //IActionResult response = Unauthorized();
             User authenticatedUser = await AuthenticateUserAsync(user);
             if (authenticatedUser != null)
             {
@@ -296,11 +278,11 @@ namespace BerrasBio.Controllers
 
             var thisUser = await _context.Users.FirstOrDefaultAsync(u => u.UserName == (claim[0].Value));
 
-            if (AuthHandler.CheckIfAdmin(this))
+            if (AuthHandler.CheckIfAdmin(this)) //Adds option to the view for a admin to go back to the full list of users during an edit.
             {
                 TempData["IsAdmin"] = true;
             }
-            else if (thisUser.UserId != id)
+            else if (thisUser.UserId != id) //Makes sure that a non admin doesn't get acess to someone elses account.
             {
                 return StatusCode(403);
             }
@@ -339,16 +321,16 @@ namespace BerrasBio.Controllers
 
             
 
-            if (AuthHandler.CheckIfAdmin(this))
+            if (AuthHandler.CheckIfAdmin(this)) //Adds option to the view for a admin to go back to the full list of users during an edit.
             {
                 TempData["IsAdmin"] = true;
             }
-            else if (thisUser.UserId != id)
+            else if (thisUser.UserId != id) //Makes sure that a non admin doesn't get acess to someone elses account.
             {
                 return StatusCode(403);
             }
 
-            if (duplicateUserName != null && duplicateUserName.UserId != user.UserId)
+            if (duplicateUserName != null && duplicateUserName.UserId != user.UserId) //Checks to see if username already exsists in the database ans is not the users own. To avoid issues with multiple usernames.
             {
                 TempData["UserNameTaken"] = "Username taken";
                 return View(user);
@@ -365,7 +347,7 @@ namespace BerrasBio.Controllers
                 {
                     user.Password = Encryption.EncryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
 
-                    var oldUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == user.UserId);
+                    var oldUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == user.UserId);  //Updates a modified entity without tracking issues
 
                     oldUser.FirstName = user.FirstName;
                     oldUser.LastName = user.LastName;
@@ -397,13 +379,13 @@ namespace BerrasBio.Controllers
                         throw;
                     }
                 }
-                if (AuthHandler.CheckIfAdmin(this))
+                if (AuthHandler.CheckIfAdmin(this)) //If admin redirects to index list
                 {
                     return RedirectToAction(nameof(Index));
                 }
                 else
                 {
-                    return RedirectToAction("Details", new { id = user.UserId });
+                    return RedirectToAction("Details", new { id = user.UserId }); //If user redirects to details view och that users profile. So a regular user won't be able to see everone elses accounts.
                 }
             }
             return View(user);
