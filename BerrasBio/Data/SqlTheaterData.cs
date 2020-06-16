@@ -247,6 +247,9 @@ namespace BerrasBio.Data
         {
             _context.Viewings.Add(viewing);
             _context.SaveChanges();
+            _context.Entry(viewing).Reference(v => v.Movie).Load();
+            viewing.Movie.IsPlaying = true;
+            _context.SaveChanges();
             return true;
         }
 

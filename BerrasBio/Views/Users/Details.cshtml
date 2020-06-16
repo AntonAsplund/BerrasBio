@@ -4,41 +4,73 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>User</h4>
+    <h1 class="details-description">Profile of @Html.DisplayFor(model => model.UserName) @if (TempData["IsAdmin"] != null)
+    {<strong>-  Admin View</strong>}</h1>
+<hr class="details-description">
+<div class="details-description">
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserName)
+        <dt class="col-sm-2">
+            Username:
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.UserName)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Password)
+        <dt class="col-sm-2">
+            First name:
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Password)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FirstName)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsAdmin)
+        <dt class="col-sm-2">
+            Last name:
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsAdmin)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastName)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PhoneNumber)
+        <dt class="col-sm-2">
+            Password
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
+            XXX
+        </dd>
+        @if (TempData["IsAdmin"] != null)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.IsAdmin)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.IsAdmin)
+            </dd>
+        }
+        <dt class="col-sm-2">
+            Phone number:
+        </dt>
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.PhoneNumber)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.UserId">Edit</a> |
-    @if (@Model.IsAdmin){
-        <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model.UserId">Edit this profile</a>
+    @if (TempData["IsAdmin"] != null){
+        
+        <a asp-action="Index">|  Go to full users list</a>
     }
 </div>
+
+<style>
+
+    .details-description {
+        color: #c2c2c2;
+    }
+    .main-content-container {
+        background-color: black;
+    }
+    .gray-box
+    {
+        background-color:black;
+    }
+
+
+</style>

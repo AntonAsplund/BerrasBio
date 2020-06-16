@@ -27,7 +27,6 @@ namespace BerrasBio.Controllers
                 return NotFound();
             }
             List<Viewing> viewings = await sqlTheaterData.GetViewingsById((int)id, order);
-
             if(viewings.Count == 0)
             {
                 return NotFound();
@@ -47,21 +46,11 @@ namespace BerrasBio.Controllers
             //return Redirect(String.Format($"../../Viewings/index/{id}/{order}"));
         }
 
-        //public async Task<IActionResult> Create()
-        //{
-        //    List<Movie> movies = await sqlTheaterData.OnGetMovies(includeOld: true);
-        //    List<Salon> salons = sqlTheaterData.GetSalons();
-        //    var model = new CreateViewingViewModel { Movies = movies, Salons = salons };
-        //    return View(model);
-        //}
-
         [HttpPost]
         public IActionResult Create(int movieId, int salonId, DateTime startTime)
         {
             var viewing = new Viewing { MovieId = movieId, SalonId = salonId, StartTime = startTime };
             sqlTheaterData.CreateViewing(viewing);
-
-
             TempData["Message"] = "Viewing was successfully added";
             return RedirectToAction("Create");
         }

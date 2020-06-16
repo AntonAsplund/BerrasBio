@@ -32,6 +32,10 @@ namespace BerrasBio.Controllers
         {
             return View();
         }
+        public IActionResult ContactUs()
+        {
+            return View();
+        }
         public IActionResult Movies()
         {
             return Redirect("/movies");
@@ -42,8 +46,5 @@ namespace BerrasBio.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
-
-
-
     }
 }

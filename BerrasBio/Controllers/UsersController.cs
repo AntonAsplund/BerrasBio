@@ -35,7 +35,7 @@ namespace BerrasBio.Controllers
         }
 
         // GET: Users
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Index()
         {
             if (AuthHandler.CheckIfAdmin(this))
@@ -52,6 +52,21 @@ namespace BerrasBio.Controllers
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
+            var context = this;
+            var identity = context.HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
+
+            var thisUser = await _context.Users.FirstOrDefaultAsync(u => u.UserName == (claim[0].Value));
+
+            if (AuthHandler.CheckIfAdmin(this))
+            {
+                TempData["IsAdmin"] = true;
+            }
+            else if (thisUser.UserId != id) 
+            {
+                return StatusCode(403);
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -67,30 +82,29 @@ namespace BerrasBio.Controllers
             return View(user);
         }
 
-        //[HttpGet]
-        //public async Task<IActionResult> LoginAsync(string username, string password)
-        //{
-        //    User userLoging = new User();
-        //    userLoging.UserName = username;
-        //    userLoging.Password = password;
-        //    IActionResult response = Unauthorized();
-        //    User user = await AuthenticateUserAsync(userLoging);
-        //    if (user != null)
-        //    {
-        //        string tokenStr = GenerateWebToken(user);
-        //        return Ok(new { token = tokenStr });
-        //    }
-        //    return response;
-        //}
+        //Method to acess your own profile page from the navbar button "my profile"
+        public async Task<IActionResult> MyDetails()
+        {
+            if (AuthHandler.CheckIfAdmin(this))
+            {
+                TempData["IsAdmin"] = true;
+            }
 
+            var context = this;
+            var identity = context.HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
 
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == (claim[0].Value));
+
+            return RedirectToAction("Details", new { id = user.UserId });
+        }
 
         private async Task<User> AuthenticateUserAsync(User userLoging)
         {
             User credentials = GetUser(userLoging.UserName);
 
             User user = null;
-            if (userLoging.UserName == credentials.UserName || Encryption.DecryptString("kljsdkkdlo4454GG00155sajuklmbkdl", userLoging.Password) == credentials.Password)
+            if (userLoging.UserName == credentials.UserName && Encryption.DecryptString("kljsdkkdlo4454GG00155sajuklmbkdl", credentials.Password) == userLoging.Password)
             {
                 user = new User()
                 {
@@ -119,7 +133,7 @@ namespace BerrasBio.Controllers
             }
         }
 
-        public User GetUser(string username)
+        private User GetUser(string username)
         {
             IQueryable<User> queryForUsername = _context.Users
                 .Where(credential => credential.UserName == username);
@@ -128,12 +142,7 @@ namespace BerrasBio.Controllers
             {
                 credentials = item;
             }
-
             return credentials;
-
-            //return context.UserCredential
-            //    .Where(credential => credential.UserName == "Daniel");
-
         }
 
         // GET: Users/Create
@@ -145,7 +154,6 @@ namespace BerrasBio.Controllers
             }
             return View();
         }
-
 
         // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
@@ -159,7 +167,6 @@ namespace BerrasBio.Controllers
             {
                 user.IsAdmin = false;
                 user.Password = Encryption.EncryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
-                //user.Password = Encryption.EncryptString(configuration["Jwt:Key"], user.Password);
                 Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<User> entityEntry = sqlTheaterData.AddUser(user);
                 await _context.SaveChangesAsync();
 
@@ -172,26 +179,24 @@ namespace BerrasBio.Controllers
             }
         }
         // GET: Users/Create
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult CreateAdmin()
         {
             return AuthHandler.RedirectToView(this);
         }
-
 
         // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateAdmin([Bind("UserId,UserName,FirstName,LastName,Password,IsAdmin,PhoneNumber")] User user)
         {
             bool hasDublicates = _context.Users.Where(u => u.UserName == user.UserName).Any();
             if (TryValidateModel(user) && !hasDublicates)
             {
                 user.Password = Encryption.EncryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
-                //user.Password = Encryption.EncryptString(configuration["Jwt:Key"], user.Password);
                 Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<User> entityEntry = sqlTheaterData.AddUser(user);
                 await _context.SaveChangesAsync();
 
@@ -203,14 +208,17 @@ namespace BerrasBio.Controllers
                 return BadRequest(ModelState);
             }
         }
-
-
         public IActionResult Login()
         {
             return View();
         }
+        
+        public IActionResult LogOut()
+        {
+            HttpContext.SignOutAsync();
+            return Redirect(String.Format($"../../Home"));
 
-
+        }
         // POST: Users/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -219,25 +227,26 @@ namespace BerrasBio.Controllers
         public async Task<IActionResult> Login([Bind("UserId,UserName,Password,IsAdmin,PhoneNumber")] User user)
         {
             User loggedInUser = _context.Users.Where(u => u.UserName == user.UserName).FirstOrDefault();
-            if (loggedInUser.UserId == 0)
+            if (loggedInUser == null)
             {
+                TempData["WrongInput"] = "Faulty towers input";
                 return Redirect(String.Format($"../../Users/Login"));
             }
 
-            IActionResult response = Unauthorized();
-            User atuenticatedUser = await AuthenticateUserAsync(user);
-            if (loggedInUser != null)
+            User authenticatedUser = await AuthenticateUserAsync(user);
+            if (authenticatedUser != null)
             {
 
-                var claims = new[] { new Claim(ClaimTypes.Name, loggedInUser.UserName),
-                    new Claim(ClaimTypes.Role, loggedInUser.IsAdmin ? "Admin" : "User")};
+                var claims = new[] { new Claim(ClaimTypes.Name, authenticatedUser.UserName),
+                    new Claim(ClaimTypes.Role, authenticatedUser.IsAdmin ? "Admin" : "User")};
 
                 var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identity));
                 return Redirect(String.Format($"../../Users/Accepted"));
 
             }
-            return response;
+            TempData["WrongInput"] = "Faulty towers input";
+            return Redirect(String.Format($"../../Users/Login"));
         }
 
         public IActionResult Accepted()
@@ -248,6 +257,22 @@ namespace BerrasBio.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+
+            var context = this;
+            var identity = context.HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
+
+            var thisUser = await _context.Users.FirstOrDefaultAsync(u => u.UserName == (claim[0].Value));
+
+            if (AuthHandler.CheckIfAdmin(this))
+            {
+                TempData["IsAdmin"] = true;
+            }
+            else if (thisUser.UserId != id)
+            {
+                return StatusCode(403);
+            }
+
             if (id == null)
             {
                 return NotFound();
@@ -257,7 +282,11 @@ namespace BerrasBio.Controllers
             {
                 return NotFound();
             }
+
+               
+            user.Password = Encryption.DecryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
             return View(user);
+
         }
 
         // POST: Users/Edit/5
@@ -265,8 +294,34 @@ namespace BerrasBio.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,UserName,Password,IsAdmin,PhoneNumber")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,UserName,FirstName,LastName,Password,IsAdmin,PhoneNumber")] User user)
         {
+
+            var context = this;
+            var identity = context.HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
+
+            var thisUser = await _context.Users.FirstOrDefaultAsync(u => u.UserName == (claim[0].Value));
+
+            var duplicateUserName = await _context.Users.FirstOrDefaultAsync(u => u.UserName == user.UserName);
+
+            
+
+            if (AuthHandler.CheckIfAdmin(this))
+            {
+                TempData["IsAdmin"] = true;
+            }
+            else if (thisUser.UserId != id)
+            {
+                return StatusCode(403);
+            }
+
+            if (duplicateUserName != null && duplicateUserName.UserId != user.UserId)
+            {
+                TempData["UserNameTaken"] = "Username taken";
+                return View(user);
+            }
+
             if (id != user.UserId)
             {
                 return NotFound();
@@ -276,8 +331,28 @@ namespace BerrasBio.Controllers
             {
                 try
                 {
-                    _context.Update(user);
+                    user.Password = Encryption.EncryptString("kljsdkkdlo4454GG00155sajuklmbkdl", user.Password);
+
+                    var oldUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == user.UserId);
+
+                    oldUser.FirstName = user.FirstName;
+                    oldUser.LastName = user.LastName;
+                    oldUser.Password = user.Password;
+                    oldUser.PhoneNumber = user.PhoneNumber;
+                    oldUser.IsAdmin = user.IsAdmin;
+                    oldUser.UserName = user.UserName;
+
                     await _context.SaveChangesAsync();
+
+
+                    if (thisUser.UserId == user.UserId) 
+                    { 
+                        var claims = new[] { new Claim(ClaimTypes.Name, user.UserName),
+                        new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User")};
+
+                        var identityClaims = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(identityClaims));
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -290,7 +365,14 @@ namespace BerrasBio.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                if (AuthHandler.CheckIfAdmin(this))
+                {
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    return RedirectToAction("Details", new { id = user.UserId });
+                }
             }
             return View(user);
         }

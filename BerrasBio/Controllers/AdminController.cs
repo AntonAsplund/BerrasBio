@@ -7,6 +7,7 @@ using BerrasBio.Data;
 using BerrasBio.Models;
 using BerrasBio.Security;
 using BerrasBio.ViewModels;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,7 +23,7 @@ namespace BerrasBio.Controllers
             this.sqlTheaterData = sqlTeaterData;
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Index()
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
@@ -39,7 +40,7 @@ namespace BerrasBio.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Details(int? id)
         {
             bool isAdmin = AuthHandler.CheckIfAdmin(this);
@@ -64,7 +65,7 @@ namespace BerrasBio.Controllers
             
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult Create()
         {
             bool isAdmin = AuthHandler.CheckIfAdmin(this);
@@ -86,7 +87,7 @@ namespace BerrasBio.Controllers
             return RedirectToAction("Create");
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> CreateViewing(int id)
         {
             bool isAdmin = AuthHandler.CheckIfAdmin(this);
@@ -114,7 +115,7 @@ namespace BerrasBio.Controllers
             return RedirectToAction("Index");
         }
 
-        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Edit(int id)
         {
             bool isAdmin = AuthHandler.CheckIfAdmin(this);

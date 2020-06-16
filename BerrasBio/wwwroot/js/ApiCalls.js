@@ -1,6 +1,15 @@
-﻿let searchButton = document.getElementById("search");
-searchButton.addEventListener("click", Search)
+﻿
 
+const callbackStart = event => {
+    let searchButton = document.getElementById("search");
+    let searchBox = document.getElementById("searchTerm");
+    searchButton.addEventListener("click", Search);
+    searchBox.addEventListener("keypress", function (e) {
+        if (e.key === 'Enter') {
+            Search();
+        }
+    });
+};
 async function Search()
 {
     document.getElementById("movieInfo").classList.add("d-none");
@@ -43,3 +52,4 @@ async function Search()
         }
     }
 }
+window.addEventListener('load', callbackStart);

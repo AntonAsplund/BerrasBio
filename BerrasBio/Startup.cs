@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using BerrasBio.Data;
@@ -25,7 +26,6 @@ namespace BerrasBio
         {
             Configuration = configuration;
         }
-
         public IConfiguration Configuration { get; }
 
         // This method gets called by thehehej runtime. Use this method to add services to the container.
@@ -35,13 +35,28 @@ namespace BerrasBio
                 cfg.UseSqlServer(Configuration.GetConnectionString("BerrasConnectionString")); 
             });
             services.AddScoped<ISqlTheaterData, SqlTheaterData>();
+
             
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+                    }
+                );
+
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o => o.LoginPath = new PathString("/Users/Login"));
 
             services.AddControllersWithViews();
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -60,15 +75,16 @@ namespace BerrasBio
             {
                 await next();
 
+                string pathWithoutAscii = RemoveNonAscii(ctx);
+
                 if (ctx.Response.StatusCode == 403 && !ctx.Response.HasStarted)
                 {
-                    string originalPath = ctx.Request.Path.Value;
-                    ctx.Response.Redirect($"/error/403?path={originalPath}");
+                    ctx.Response.Redirect($"/error/403?path={pathWithoutAscii}");
                 }
                 else if (ctx.Response.StatusCode == 404 && !ctx.Response.HasStarted)
                 {
-                    string originalPath = ctx.Request.Path.Value;
-                    ctx.Response.Redirect($"/error/404?path={originalPath}");
+
+                    ctx.Response.Redirect($"/error/404?path={pathWithoutAscii}");
                 }
             });
 
@@ -79,8 +95,6 @@ namespace BerrasBio
 
             app.UseAuthentication();
             app.UseAuthorization();
-            
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -89,6 +103,12 @@ namespace BerrasBio
             });
 
             
+        }
+
+        private static string RemoveNonAscii(HttpContext ctx)
+        {
+            return Encoding.ASCII.GetString(Encoding.Convert(Encoding.UTF8, Encoding.
+                                    GetEncoding(Encoding.ASCII.EncodingName, new EncoderReplacementFallback(string.Empty), new DecoderExceptionFallback()), Encoding.UTF8.GetBytes(ctx.Request.Path.Value)));
         }
     }
 }

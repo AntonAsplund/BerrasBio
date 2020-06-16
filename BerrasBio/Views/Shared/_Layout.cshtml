@@ -20,12 +20,35 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
+                    <ul class="navbar-nav flex-grow-1 ml-auto dropdown">
+
+                        <li class="nav-item login-navbar " >
+                            <!--<a class="nav-link text-white nav-Login-Button" asp-controller="Users" asp-action="Login">Login</a>-->
+                             
+                            <img src="~/Assets/Images/userAvatar.png" class="nav-Login-Button avatar-icon-container dropdown-toggle" data-toggle="dropdown" id="avatarIcon"/>
+
+                            @if (!User.Identity.IsAuthenticated)
+                            {
+                                @await Html.PartialAsync("DropDownLogin", new User())
+                            }
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <div class="dropdown-menu bg-danger nav-my-profile-button-container navbar-decoration">
+                                    <a class="dropdown-item btn btn-light dropdown-item" asp-controller="Users" asp-action="MyDetails">My Profile</a>
+                                    <a class="dropdown-item btn btn-secondary dropdown-item" asp-controller="Users" asp-action="LogOut">Log out</a>
+                                </div>
+                            }
+                        </li>
+                    </ul>
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Hem</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Movies">Movies</a>
+                        <li class="nav-item" id="movies">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Movies">Filmer</a>
+                        </li>
+                        <li class="nav-item" id="contact_us">
+                            <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="ContactUs">Kontakta oss</a>
                         </li>
 
                         @if (User.Identity.IsAuthenticated && User.Claims.ToList()[1].Value == "Admin")
@@ -35,6 +58,7 @@
                             </li>
                         }
                     </ul>
+
                 </div>
             </div>
         </nav>
