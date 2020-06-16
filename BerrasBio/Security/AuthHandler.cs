@@ -38,18 +38,6 @@ namespace BerrasBio.Security
 
         }
 
-        internal static bool CheckIfCorrectUser(string userName, Controller context)
-        {
-            var identity = context.HttpContext.User.Identity as ClaimsIdentity;
-            IList<Claim> claim = identity.Claims.ToList();
-            bool isCorrectUser = false;
-            if (claim != null && claim.Count > 0)
-            {   
-                isCorrectUser = claim[0].Value == userName;
-            }
-            return isCorrectUser;
-        }
-
         internal static IActionResult RedirectToView(Controller context)
         {
             if (CheckIfAdmin(context))
