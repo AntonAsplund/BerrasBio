@@ -1,0 +1,61 @@
+﻿@model IEnumerable<BerrasBio.Models.Seat>
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if(TempData["Message"] != null)
+{
+    <div class="alert alert-danger">@TempData["Message"]</div>
+}
+
+<h1 class="text-white">Salong: @Model.First().Salon.Name</h1>
+
+<p class="text-white">
+    Välj upp till tolv platser: <span id="seat-count">0</span>
+</p>
+
+<div class="mt-4">
+
+    <form asp-action="Index" class="seats-grid">
+        @foreach (var item in Model)
+        {
+
+            <div class="seat-num text-white">
+                <p>
+                    @item.SeatNumber
+                </p>
+                <div class="seat-cont" id="@item.SeatNumber">
+                    <input asp-for="@item.Booked" class="check-seat" name="@item.SeatId" type="checkbox" placeholder="@item.SeatId" />
+                </div>
+            </div>
+
+        }
+        <input name="viewingId" type="hidden" value="@Model.First().ViewingId" />
+
+        <div class="form-group">
+            <input type="submit" value="Fortsätt" class="btn btn-danger mt-3" />
+        </div>
+    </form>
+
+    <div>
+        <a class="btn btn-dark" asp-controller="Movies" asp-action="Details" asp-route-id="@ViewData["MovieId"]">Back</a>
+    </div>
+
+</div>
+
+<form name="ignore_me">
+    <input type="hidden" id="page_is_dirty" name="page_is_dirty" value="0" />
+</form>
+
+<style>
+    .container {
+        background-color: transparent;
+    }
+
+    #layoutBackground {
+        background-image: none;
+        background-color: black;
+    }
+</style>

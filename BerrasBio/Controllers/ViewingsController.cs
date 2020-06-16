@@ -36,7 +36,7 @@ namespace BerrasBio.Controllers
         }
         public IActionResult Book(int? id)
         {
-            string url = String.Format($"../../Seats/index/{id}");
+            string url = String.Format($"../../Reserve/Index/{id}");
             return base.Redirect(url);
         }
 

@@ -14,7 +14,7 @@ namespace BerrasBio.Data
         Task<User> OnGetUser(int? id);
         Task<List<User>> OnGetUsers();
         Task<List<Seat>> FindSeats(int id);
-        Order CreateOrder(List<int> seatIds, int viewingId);
+        Order CreateOrder(List<int> seatIds, int viewingId, string userName);
         Task<List<Viewing>> GetViewingsById(int movieId, string order);
         Task<Order> GetOrder(int Id);
         Task<int> Update(Order order);
@@ -30,5 +30,8 @@ namespace BerrasBio.Data
         Task DeleteMovieAt(int id);
         bool DoesMovieExist(int id);
         bool MovieHasViewings(int movieId);
+        List<int> GetSeatNumbers(int[] seatIds);
+        Viewing GetViewingById(int id);
+        Task<bool> OnDeleteMovie(int id);
     }
 }

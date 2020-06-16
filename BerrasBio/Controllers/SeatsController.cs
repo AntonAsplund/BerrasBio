@@ -24,7 +24,11 @@ namespace BerrasBio.Controllers
         /// <summary>
         /// Will add everytime user click a seat.
         /// </summary>
-        public int NumBookedSeats { get; set; }
+        public int NumBookedSeats 
+        { 
+            get; 
+            set;
+        }
         // todo: Check how to add a button and method to controll it.
         public SeatsController(ISqlTheaterData sqlTheaterData)
         {
@@ -64,7 +68,7 @@ namespace BerrasBio.Controllers
                     seatIds.Add(seatId);
                 }
             }
-            Order order = sqlTheaterData.CreateOrder(seatIds, viewingId);
+            Order order = sqlTheaterData.CreateOrder(seatIds, viewingId, User.Identity.Name);
             if (!TryValidateModel(order))
             {
                 return BadRequest(ModelState);

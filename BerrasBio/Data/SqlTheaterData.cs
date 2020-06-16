@@ -53,13 +53,11 @@ namespace BerrasBio.Data
             return await _context.Users.ToListAsync();
         }
 
-        public Order CreateOrder(List<int> seatIds, int viewingId)
+        public Order CreateOrder(List<int> seatIds, int viewingId, string userName)
         {
-            User user = CreateUser();
-            user.UserName = "Unknown";
+            User user = _context.Users.FirstOrDefault(u => u.UserName == userName);
+
             Order order = new Order();
-            //order.CustomerName = "Unknown";
-            //_context.Add(ticket);
             order.Tickets = new List<Ticket>();
             _context.Add(order);
             order.UserId = user.UserId;
@@ -76,9 +74,22 @@ namespace BerrasBio.Data
             }
             return order;
         }
+
+        public List<int> GetSeatNumbers(int[] seatIds)
+        {
+            List<int> seatNumbers = new List<int>();
+
+            foreach (int id in seatIds)
+            {
+                seatNumbers.Add(_context.Seats.FirstOrDefault(s => s.SeatId == id).SeatNumber);
+            }
+
+            return seatNumbers;
+        }
+
         public void LoadOrder(Order order)
         {
-          //  _context.Entry(order).Collection(o => o.Tickets).Load();
+            //  _context.Entry(order).Collection(o => o.Tickets).Load();
             _context.Entry(order).Reference(o => o.User).Load();
         }
 
@@ -148,9 +159,12 @@ namespace BerrasBio.Data
                 viewing.SeatsLeft = 50 - viewing.Tickets.Count;
                 viewing.FormatedStartTime = viewing.StartTime.ToString("dddd HH:mm");
             }
-            if (order == "Num") { 
+            if (order == "Num")
+            {
                 return viewings.OrderBy(x => x.SeatsLeft).ToList();
-            } else { 
+            }
+            else
+            {
                 return viewings.OrderBy(x => x.StartTime).ToList();
             }
         }
@@ -185,9 +199,9 @@ namespace BerrasBio.Data
             }
 
             int viewingId = Seats.First().ViewingId;
-           // Viewing viewing = _context.Viewings.Find(viewingId);
-           // _context.Entry(viewing).Reference(v => v.Movie).Load();
-           // Seats.First().MovieTitle = viewing.Movie.Title;
+            // Viewing viewing = _context.Viewings.Find(viewingId);
+            // _context.Entry(viewing).Reference(v => v.Movie).Load();
+            // Seats.First().MovieTitle = viewing.Movie.Title;
 
             return Seats;
         }
@@ -236,5 +250,76 @@ namespace BerrasBio.Data
             return true;
         }
 
+        public Viewing GetViewingById(int id)
+        {
+            Viewing viewing = _context.Viewings.Include("Movie").Include("Salon").FirstOrDefault(v => v.ViewingId == id);
+
+            viewing.FormatedStartTime = viewing.StartTime.ToString("dddd HH:mm");
+
+            return viewing;
+        }
+
+        public async Task<bool> OnDeleteMovie(int id)
+        {
+            Movie movie = await OnGetMovie(id);
+
+            if (movie == null)
+                return false;
+
+            List<Viewing> viewings = _context.Viewings.Include("Movie").Include("Tickets").Where(v => v.MovieId == id).ToList();
+
+            if(viewings.Count > 1)
+            {
+
+                foreach(Viewing viewing in viewings)
+                {
+                    if (viewing.Tickets.Count != 0)
+                    {
+                        IEnumerable<Ticket> tickets = _context.Tickets.Where(t => t.ViewingId == viewing.ViewingId);
+                        _context.Tickets.RemoveRange(tickets);
+                        _context.Viewings.Remove(viewing);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    else
+                    {
+                        _context.Viewings.Remove(viewing);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+
+                _context.Movies.Remove(movie);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+
+            else if(viewings.Count == 1)
+            {
+                if (viewings[0].Tickets.Count != 0)
+                {
+                    IEnumerable<Ticket> tickets = _context.Tickets.Where(t => t.ViewingId == viewings[0].ViewingId);
+                    _context.Tickets.RemoveRange(tickets);
+                    _context.Viewings.Remove(viewings[0]);
+                    _context.Movies.Remove(movie);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+
+                else
+                {
+                    _context.Viewings.Remove(viewings[0]);
+                    _context.Movies.Remove(movie);
+                    await _context.SaveChangesAsync();
+                    return true;
+                }
+            }
+
+            else
+            {
+                _context.Movies.Remove(movie);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+        }
     }
 }

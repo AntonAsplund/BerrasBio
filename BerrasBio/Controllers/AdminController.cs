@@ -8,6 +8,7 @@ using BerrasBio.Models;
 using BerrasBio.Security;
 using BerrasBio.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -155,6 +156,46 @@ namespace BerrasBio.Controllers
                 return RedirectToAction("Index");
             }
             return RedirectToAction("Edit", new { movie.MovieId});
+        }
+
+        [Authorize]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
+            bool isAdmin = claim[1].Value == "Admin";
+
+            if (isAdmin)
+            {
+                var model = await sqlTheaterData.OnGetMovie(id);
+                return View(model);
+            }
+
+            else
+            {
+                return StatusCode(403);
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id, IFormCollection form)
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            IList<Claim> claim = identity.Claims.ToList();
+            bool isAdmin = claim[1].Value == "Admin";
+
+            if (isAdmin)
+            {
+                await sqlTheaterData.OnDeleteMovie(id);
+                TempData["Message"] = "Movie was successfully deleted";
+                return RedirectToAction("Index");
+            }
+
+            else
+            {
+                return StatusCode(403);
+            }
         }
 
         private bool MovieExists(int id)

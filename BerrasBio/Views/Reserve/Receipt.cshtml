@@ -1,0 +1,77 @@
+﻿@model BerrasBio.Models.Order
+
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+    <div>
+        <h3 class="text-white">Receipt</h3>
+
+        <h5 class="text-white mt-5">Tickets</h5>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="movies">
+                        Titel
+                    </th>
+                    <th class="movies">
+                        Salong
+                    </th>
+                    <th class="movies">
+                        Platsnummer
+                    </th>
+                    <th class="movies">
+                        Tid
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var ticket in Model.Tickets)
+                {
+                    <tr>
+                        <td class="details">
+                            @Html.DisplayFor(modelItem => ticket.Viewing.Movie.Title)
+                        </td>
+                        <td class="details">
+                            @Html.DisplayFor(modelItem => ticket.Viewing.Salon.Name)
+                        </td>
+                        <td class="details">
+                            @Html.DisplayFor(modelItem => ticket.Seat.SeatNumber)
+                        </td>
+                        <td class="details">
+                            @Html.DisplayFor(modelItem => ticket.Viewing.FormatedStartTime)
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+        <p class="details">Hello @Model.User.UserName! <br />
+        Your tickets has been reserved! You can collect them at the counter no later than one hour 
+        before the movie starts.
+        </p>
+    </div>
+
+    <div>
+        <a class="btn btn-danger" asp-controller="Movies" asp-action="Index">Back to start</a>
+    </div>
+
+    <style>
+        .container {
+            background-color: transparent;
+        }
+
+        #layoutBackground {
+            background-image: none;
+            background-color: black;
+        }
+
+        .movies {
+            color: #F5F5F5;
+        }
+
+        .details {
+            color: #D5D5D5;
+        }
+    </style>

@@ -45,21 +45,17 @@ else
 
     <h3 class="movie-title mt-5">Visningar</h3>
 
-    <table class="table mt-4">
+    <table class="table mt-4" id="movies">
         <thead>
             <tr>
-                <th>
-                    <a asp-action="CheckView" asp-route-id="@Model.Movie.MovieId" asp-route-order="Time" class="movie-title font-weight-bold">Start tid</a>
-
-
+                <th class="sort-time" id="startTime">
+                    Start time
                 </th>
                 <th class="movie-title">
                     Salong
                 </th>
-                <th>
-                    <a asp-action="CheckView" asp-route-id="@Model.Movie.MovieId" asp-route-order="Num" class="movie-title font-weight-bold">Platser kvar</a>
-
-
+                <th class="sort-seats" id="availableSeats">
+                    Available seats
                 </th>
                 <th></th>
             </tr>
@@ -79,7 +75,7 @@ else
                         @item.SeatsLeft
                     </td>
                     <td>
-                        <a asp-controller="Viewings" asp-action="Book" asp-route-id="@item.ViewingId" class="btn btn-danger">Boka biljetter</a>
+                        <a asp-controller="Reserve" asp-action="Index" asp-route-id="@item.ViewingId" class="btn btn-danger">Boka biljetter</a>
                     </td>
 
                 </tr>
@@ -122,4 +118,12 @@ else
     .btn {
         cursor: pointer;
     }
+
+    .sort-seats, .sort-time
+    {
+        color: #F5F5F5;
+        cursor: pointer;
+    }
 </style>
+
+<script src="~/js/Sort.js"></script>
