@@ -46,7 +46,7 @@ namespace BerrasBio.Controllers
 
             return viewing;
         }
-
+        // FUNKAR INTE
         public async Task<ActionResult<List<Viewing>>> Index(int? id, string order)
         {
             if (id == null)
@@ -68,7 +68,7 @@ namespace BerrasBio.Controllers
         // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> PutViewing(int id, Viewing viewing)
+        public async Task<IActionResult> PutViewing(int id, [FromBody] Viewing viewing)
         {
             if (id != viewing.ViewingId)
             {

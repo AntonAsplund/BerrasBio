@@ -171,7 +171,8 @@ namespace BerrasBio.Controllers
                 await _context.SaveChangesAsync();
 
 
-                return RedirectToAction(nameof(Details), new { id = user.UserId });
+                TempData["UserCreated"] = "Användare skapad, nu kan du logga in";
+                return Redirect(String.Format($"../../Users/Login"));
             }
             else
             {
@@ -201,7 +202,8 @@ namespace BerrasBio.Controllers
                 await _context.SaveChangesAsync();
 
 
-                return RedirectToAction(nameof(Details), new { id = user.UserId });
+                TempData["UserCreated"] = "Användare skapad, nu kan du logga in";
+                return Redirect(String.Format($"../../Users/Login"));
             }
             else
             {
