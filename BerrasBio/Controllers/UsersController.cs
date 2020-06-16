@@ -170,7 +170,6 @@ namespace BerrasBio.Controllers
                 Microsoft.EntityFrameworkCore.ChangeTracking.EntityEntry<User> entityEntry = sqlTheaterData.AddUser(user);
                 await _context.SaveChangesAsync();
 
-
                 TempData["UserCreated"] = "Användare skapad, nu kan du logga in";
                 return Redirect(String.Format($"../../Users/Login"));
             }
