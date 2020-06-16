@@ -31,7 +31,7 @@ namespace BerrasBio.Controllers
             }
             else
             {
-                ViewData["MovieId"] = id;
+                ViewData["MovieId"] = sqlTheaterData.GetViewingById((int)id).MovieId;
                 return View(await sqlTheaterData.FindSeats((int)id));
             }
         }

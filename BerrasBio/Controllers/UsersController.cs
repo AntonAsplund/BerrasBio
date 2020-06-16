@@ -104,6 +104,10 @@ namespace BerrasBio.Controllers
             User credentials = GetUser(userLoging.UserName);
 
             User user = null;
+            if (credentials == null)
+            {
+                return user;
+            }
             if (userLoging.UserName == credentials.UserName && Encryption.DecryptString("kljsdkkdlo4454GG00155sajuklmbkdl", credentials.Password) == userLoging.Password)
             {
                 user = new User()
@@ -201,7 +205,7 @@ namespace BerrasBio.Controllers
                 await _context.SaveChangesAsync();
 
 
-                TempData["UserCreated"] = "Användare skapad, nu kan du logga in";
+                TempData["UserCreated"] = "A user has been sucessfully created, please log in.";
                 return Redirect(String.Format($"../../Users/Login"));
             }
             else
@@ -227,14 +231,7 @@ namespace BerrasBio.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([Bind("UserId,UserName,Password,IsAdmin,PhoneNumber")] User user)
         {
-            User loggedInUser = _context.Users.Where(u => u.UserName == user.UserName).FirstOrDefault();
-            if (loggedInUser == null)
-            {
-                TempData["WrongInput"] = "Faulty towers input";
-                return Redirect(String.Format($"../../Users/Login"));
-            }
-
-            User authenticatedUser = await AuthenticateUserAsync(user);
+            User authenticatedUser = await AuthenticateUserAsync(user); //Validates username
             if (authenticatedUser != null)
             {
 
@@ -246,7 +243,7 @@ namespace BerrasBio.Controllers
                 return Redirect(String.Format($"../../Users/Accepted"));
 
             }
-            TempData["WrongInput"] = "Faulty towers input";
+            TempData["WrongInput"] = "Incorrect username or password";
             return Redirect(String.Format($"../../Users/Login"));
         }
 

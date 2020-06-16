@@ -150,7 +150,7 @@ namespace BerrasBio.Data
 
         public async Task<List<Viewing>> GetViewingsById(int movieId, string order)
         {
-            List<Viewing> viewings = await _context.Viewings.Where(x => x.MovieId == movieId).ToListAsync();
+            List<Viewing> viewings = await _context.Viewings.Where(x => x.MovieId == movieId).Where(x => x.StartTime > DateTime.UtcNow).ToListAsync();
             foreach (Viewing viewing in viewings)
             {
                 _context.Entry(viewing).Reference(v => v.Movie).Load();
