@@ -9,7 +9,7 @@ Post-Deployment Script Template
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
 */
-USE [BerrasBio]
+USE [BerrasBio_30]
 GO
 
 
@@ -38,4 +38,20 @@ BEGIN
 	VALUES (1, @y);
 	SET @y = @y + 1;
 END
+
+
+INSERT INTO [dbo].[Users]
+           ([UserName]
+           ,[Password]
+           ,[IsAdmin]
+           ,[PhoneNumber]
+           ,[FirstName]
+           ,[LastName])
+     VALUES
+           ('Claes'
+           ,'1RWeyINARyOfC9l5Oq9Qcw=='
+           ,1
+           ,5555
+           ,'Claes'
+           ,'Engelin');
 GO
