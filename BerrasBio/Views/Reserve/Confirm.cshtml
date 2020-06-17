@@ -19,16 +19,16 @@
             <table class="table">
                 <thead>
                     <tr>
-                        <th class="movies">
+                        <th class="title-white">
                             Titel
                         </th>
-                        <th class="movies">
+                        <th class="title-white">
                             Salong
                         </th>
-                        <th class="movies">
+                        <th class="title-white">
                             Platsnummer
                         </th>
-                        <th class="movies">
+                        <th class="title-white">
                             Tid
                         </th>
                     </tr>
@@ -37,16 +37,16 @@
                     @foreach (var seat in Model.SeatNumbers)
                     {
                         <tr>
-                            <td class="details">
+                            <td class="details-white">
                                 @Html.DisplayFor(modelItem => Model.Viewing.Movie.Title)
                             </td>
-                            <td class="details">
+                            <td class="details-white">
                                 @Html.DisplayFor(modelItem => Model.Viewing.Salon.Name)
                             </td>
-                            <td class="details">
+                            <td class="details-white">
                                 @Html.DisplayFor(modelItem => seat)
                             </td>
-                            <td class="details">
+                            <td class="details-white">
                                 @Html.DisplayFor(modelItem => Model.Viewing.FormatedStartTime)
                             </td>
                         </tr>
@@ -79,15 +79,5 @@
     #layoutBackground {
         background-image: none;
         background-color: black;
-    }
-
-    .movies
-    {
-        color: #F5F5F5;
-    }
-
-    .details
-    {
-        color: #D5D5D5;
     }
 </style>

@@ -104,3 +104,61 @@ body {
 .navbar {
     padding: 0;
 }
+
+.title-white {
+    color: #F5F5F5;
+}
+
+.details-white {
+    color: #D5D5D5;
+}
+
+.details-black {
+    color: black;
+}
+
+.poster-img-list {
+    border-radius: 5px;
+    margin-bottom: 0.5em;
+}
+
+.poster-img-details {
+    border-radius: 5px;
+    border: 0.5px solid white;
+}
+
+.sort-seats, .sort-time {
+    color: #F5F5F5;
+    cursor: pointer;
+}
+
+.header-title {
+    margin-left: 1em;
+}
+
+.title {
+    color: #F5F5F5;
+    font-weight: bold;
+}
+
+.title:hover {
+    border-bottom: 2px solid #F5F5F5;
+    color: #F5F5F5;
+}
+
+.border-sep {
+    border-bottom: 1px solid #646464;
+}
+
+.border-sep-black {
+    border-bottom: 1px solid black;
+}
+
+.movies-list {
+    margin-top: 5em;
+}
+
+.text-container {
+    margin-left: 1em;
+    font-family: Arial, Helvetica, sans-serif;
+}

@@ -6,13 +6,13 @@
     <div class="d-flex flex-row align-items-end">
 
         <div>
-            <img class="img-fluid" height="300" width="200" src="@Model.Movie.PosterURL" alt="@Model.Movie.Title poster image" />
+            <img class="img-fluid poster-img-details" height="300" width="200" src="@Model.Movie.PosterURL" alt="@Model.Movie.Title poster image" />
         </div>
 
         <div class="header-title">
-            <h3 class="movie-title">@Model.Movie.Title</h3>
-            <span class="font-weight-bold movie-title">@Model.Movie.Cathegory</span> <br />
-            <span class="movie-cat">
+            <h3 class="title-white">@Model.Movie.Title</h3>
+            <span class="font-weight-bold title-white">@Model.Movie.Cathegory</span> <br />
+            <span class="details-white">
                 @Model.Movie.LengthMinute min | PG:
                 @if (Model.Movie.PerentalGuidance == 0)
                 {
@@ -27,23 +27,23 @@
 
     </div>
 
-    <div class="mt-5 movie-title">
+    <div class="mt-5 details-white">
         <p>@Model.Movie.Plot</p>
-        <span><text class="movie-cat">Director: </text><br />@Model.Movie.Director</span> <br /><br />
-        <span><text class="movie-cat">Actors: </text><br />@Model.Movie.Actors</span> <br /><br />
-        <span><text class="movie-cat">Release: </text><br />@Model.Movie.ReleaseYear</span>
+        <span><text class="title-white">Director: </text><br />@Model.Movie.Director</span> <br /><br />
+        <span><text class="title-white">Actors: </text><br />@Model.Movie.Actors</span> <br /><br />
+        <span><text class="title-white">Release: </text><br />@Model.Movie.ReleaseYear</span>
     </div>
 </div>
 
 @if (Model.Viewings.Count == 0)
 {
-    <h3 class="movie-title mt-5">Inga visningar</h3>
+    <h3 class="title-white mt-5">Inga visningar</h3>
 }
 
 else
 {
 
-    <h3 class="movie-title mt-5">Visningar</h3>
+    <h3 class="title-white mt-5">Visningar</h3>
 
     <table class="table mt-4" id="movies">
         <thead>
@@ -51,7 +51,7 @@ else
                 <th class="sort-time" id="startTime">
                     Start time
                 </th>
-                <th class="movie-title">
+                <th class="title-white">
                     Salong
                 </th>
                 <th class="sort-seats" id="availableSeats">
@@ -63,7 +63,7 @@ else
         <tbody>
             @foreach (var item in Model.Viewings)
             {
-                <tr class="movie-cat">
+                <tr class="details-white">
                     <td>
                         @Html.DisplayFor(modelItem => item.FormatedStartTime)
                     </td>
@@ -89,15 +89,6 @@ else
     <a asp-action="Index" class="btn btn-dark mt-3">Back</a>
 </div>
 <style>
-    div > img {
-        border-radius: 5px;
-        border: 0.5px solid white;
-    }
-
-    .header-title {
-        margin-left: 1em;
-    }
-
     .container {
         background-color: transparent;
     }
@@ -105,24 +96,6 @@ else
     #layoutBackground {
         background-image: none;
         background-color: black;
-    }
-
-    .movie-title {
-        color: #F5F5F5;
-    }
-
-    .movie-cat {
-        color: #CFCFCF;
-    }
-
-    .btn {
-        cursor: pointer;
-    }
-
-    .sort-seats, .sort-time
-    {
-        color: #F5F5F5;
-        cursor: pointer;
     }
 </style>
 

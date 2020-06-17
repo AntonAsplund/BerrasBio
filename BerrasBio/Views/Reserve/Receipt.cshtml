@@ -12,16 +12,16 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th class="movies">
+                    <th class="title-white">
                         Titel
                     </th>
-                    <th class="movies">
+                    <th class="title-white">
                         Salon
                     </th>
-                    <th class="movies">
+                    <th class="title-white">
                         Seatnumber
                     </th>
-                    <th class="movies">
+                    <th class="title-white">
                         Start time
                     </th>
                 </tr>
@@ -30,16 +30,16 @@
                 @foreach (var ticket in Model.Tickets)
                 {
                     <tr>
-                        <td class="details">
+                        <td class="details-white">
                             @Html.DisplayFor(modelItem => ticket.Viewing.Movie.Title)
                         </td>
-                        <td class="details">
+                        <td class="details-white">
                             @Html.DisplayFor(modelItem => ticket.Viewing.Salon.Name)
                         </td>
-                        <td class="details">
+                        <td class="details-white">
                             @Html.DisplayFor(modelItem => ticket.Seat.SeatNumber)
                         </td>
-                        <td class="details">
+                        <td class="details-white">
                             @Html.DisplayFor(modelItem => ticket.Viewing.FormatedStartTime)
                         </td>
                     </tr>
@@ -65,13 +65,5 @@
         #layoutBackground {
             background-image: none;
             background-color: black;
-        }
-
-        .movies {
-            color: #F5F5F5;
-        }
-
-        .details {
-            color: #D5D5D5;
         }
     </style>
