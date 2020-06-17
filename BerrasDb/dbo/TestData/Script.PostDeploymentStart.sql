@@ -9,10 +9,6 @@ Post-Deployment Script Template
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
 */
-USE [BerrasBio_30]
-GO
-
-
 
 INSERT INTO dbo.Salons([Name])
 VALUES ('Drottningen');
@@ -54,4 +50,3 @@ INSERT INTO [dbo].[Users]
            ,5555
            ,'Claes'
            ,'Engelin');
-GO
